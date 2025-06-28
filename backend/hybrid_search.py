@@ -175,48 +175,54 @@ class HybridSearchService:
                      max_results: int = 10,
                      document_filters: Dict = None) -> List[HybridSearchResult]:
         """Perform hybrid search combining ChromaDB documents and Neo4j graph context"""
-        try:
-            # Step 1: Expand query using Neo4j graph relationships
-            expanded_query, related_entities = self.expand_query_with_graph(query)
-            
-            # Step 2: Search documents in ChromaDB
-            doc_results = chroma_service.search_documents(
-                query=expanded_query,
-                n_results=max_results,
-                where=document_filters
-            )
-            
-            # Step 3: Get graph context for related entities
-            graph_context = self.get_graph_context_for_entities(related_entities)
-            
-            # Step 4: Combine results
-            hybrid_results = []
-            for doc in doc_results:
-                # Get additional graph context specific to this document
-                doc_entities = self._extract_entities_from_document(doc['metadata'])
-                doc_graph_context = self.get_graph_context_for_entities(doc_entities)
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                # Step 1: Expand query using Neo4j graph relationships
+                expanded_query, related_entities = self.expand_query_with_graph(query)
                 
-                # Combine general and document-specific context
-                combined_context = graph_context + doc_graph_context
-                
-                hybrid_result = HybridSearchResult(
-                    document_id=doc['id'],
-                    title=doc['metadata'].get('title', 'Untitled'),
-                    content=doc['content'],
-                    metadata=doc['metadata'],
-                    similarity=doc['similarity'] or 0.0,
-                    graph_context=combined_context,
-                    related_entities=related_entities + doc_entities
+                # Step 2: Search documents in ChromaDB
+                doc_results = chroma_service.search_documents(
+                    query=expanded_query,
+                    n_results=max_results,
+                    where=document_filters
                 )
                 
-                hybrid_results.append(hybrid_result)
-            
-            logger.info(f"Hybrid search returned {len(hybrid_results)} results")
-            return hybrid_results
-            
-        except Exception as e:
-            logger.error(f"Hybrid search failed: {e}")
-            raise
+                # Step 3: Get graph context for related entities
+                graph_context = self.get_graph_context_for_entities(related_entities)
+                
+                # Step 4: Combine results
+                hybrid_results = []
+                for doc in doc_results:
+                    # Get additional graph context specific to this document
+                    doc_entities = self._extract_entities_from_document(doc['metadata'])
+                    doc_graph_context = self.get_graph_context_for_entities(doc_entities)
+                    
+                    # Combine general and document-specific context
+                    combined_context = graph_context + doc_graph_context
+                    
+                    hybrid_result = HybridSearchResult(
+                        document_id=doc['id'],
+                        title=doc['metadata'].get('title', 'Untitled'),
+                        content=doc['content'],
+                        metadata=doc['metadata'],
+                        similarity=doc['similarity'] or 0.0,
+                        graph_context=combined_context,
+                        related_entities=related_entities + doc_entities
+                    )
+                    
+                    hybrid_results.append(hybrid_result)
+                
+                logger.info(f"Hybrid search returned {len(hybrid_results)} results")
+                return hybrid_results
+                
+            except Exception as e:
+                logger.warning(f"Hybrid search attempt {attempt + 1} failed: {e}")
+                if attempt == max_retries - 1:
+                    logger.error(f"Hybrid search failed after {max_retries} attempts: {e}")
+                    raise
+                import time
+                time.sleep(0.5)  # Brief delay before retry
     
     def _extract_entities_from_document(self, metadata: Dict[str, Any]) -> List[str]:
         """Extract entity names from document metadata"""
