@@ -1,8 +1,9 @@
 fastapi
-uvicorn
+uvicorn[standard]
 neo4j
 python-dotenv
 pydantic
+pydantic-settings
 anthropic
 sentence-transformers
 numpy
