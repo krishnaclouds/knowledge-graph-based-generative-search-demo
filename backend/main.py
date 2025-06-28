@@ -11,6 +11,8 @@ load_dotenv()
 from config import get_settings
 from database import db
 from services import search_service
+from hybrid_search import hybrid_search_service
+from vector_store import chroma_service
 from models import SearchQuery, HealthStatus
 from utils import setup_logging, format_graph_data
 
@@ -91,19 +93,75 @@ def get_graph():
 def search_knowledge_graph(search_query: SearchQuery):
     """Search the knowledge graph using semantic search and generate an answer"""
     try:
-        logger.info(f"Search requested: '{search_query.query}' (max_results: {search_query.max_results})")
+        logger.info(f"Knowledge graph search requested: '{search_query.query}' (max_results: {search_query.max_results})")
         
         result = search_service.search_and_answer(
             query=search_query.query,
             max_results=search_query.max_results
         )
         
-        logger.info(f"Search completed. Found {len(result['results'])} results")
+        logger.info(f"Knowledge graph search completed. Found {len(result['results'])} results")
         return JSONResponse(result)
         
     except Exception as e:
-        logger.error(f"Search failed: {e}")
+        logger.error(f"Knowledge graph search failed: {e}")
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
+@app.post("/hybrid-search")
+def hybrid_search(search_query: SearchQuery):
+    """Hybrid search combining ChromaDB documents with Neo4j knowledge graph"""
+    try:
+        logger.info(f"Hybrid search requested: '{search_query.query}' (max_results: {search_query.max_results})")
+        
+        # Perform hybrid search
+        hybrid_results = hybrid_search_service.hybrid_search(
+            query=search_query.query,
+            max_results=search_query.max_results
+        )
+        
+        # Generate comprehensive answer
+        result = hybrid_search_service.generate_hybrid_answer(
+            query=search_query.query,
+            hybrid_results=hybrid_results
+        )
+        
+        logger.info(f"Hybrid search completed. Found {len(hybrid_results)} documents")
+        return JSONResponse(result)
+        
+    except Exception as e:
+        logger.error(f"Hybrid search failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Hybrid search failed: {str(e)}")
+
+@app.get("/documents/stats")
+def get_document_stats():
+    """Get statistics about the document collection"""
+    try:
+        stats = chroma_service.get_collection_stats()
+        return JSONResponse(stats)
+    except Exception as e:
+        logger.error(f"Failed to get document stats: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get stats: {str(e)}")
+
+@app.post("/documents/search")
+def search_documents_only(search_query: SearchQuery):
+    """Search only the document collection (ChromaDB)"""
+    try:
+        logger.info(f"Document search requested: '{search_query.query}'")
+        
+        results = chroma_service.search_documents(
+            query=search_query.query,
+            n_results=search_query.max_results
+        )
+        
+        return JSONResponse({
+            "query": search_query.query,
+            "results": results,
+            "total_found": len(results)
+        })
+        
+    except Exception as e:
+        logger.error(f"Document search failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Document search failed: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

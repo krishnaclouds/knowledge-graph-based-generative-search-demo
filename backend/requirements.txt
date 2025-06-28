@@ -7,4 +7,5 @@ pydantic-settings
 anthropic
 sentence-transformers
 numpy
-scikit-learn 
+scikit-learn
+chromadb 

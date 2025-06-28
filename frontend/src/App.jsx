@@ -13,6 +13,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [searchMode, setSearchMode] = useState('hybrid'); // 'hybrid', 'knowledge-graph', 'documents'
   const [connectionStatus, setConnectionStatus] = useState('unknown');
   const [retryCount, setRetryCount] = useState(0);
 
@@ -66,7 +67,7 @@ function App() {
     }
   };
 
-  // Function to search the knowledge graph using RAG
+  // Function to search using different modes
   const searchGraph = async () => {
     if (!searchQuery.trim()) {
       setError('Please enter a search query');
@@ -83,18 +84,29 @@ function App() {
         throw new Error('Cannot connect to backend server. Please ensure the backend is running on port 8000.');
       }
       
-      const res = await axios.post(`${API_BASE_URL}/search`, {
+      let endpoint = '/search'; // default to knowledge graph search
+      if (searchMode === 'hybrid') {
+        endpoint = '/hybrid-search';
+      } else if (searchMode === 'documents') {
+        endpoint = '/documents/search';
+      }
+      
+      const res = await axios.post(`${API_BASE_URL}${endpoint}`, {
         query: searchQuery.trim(),
-        max_results: 5
+        max_results: 8
       }, { timeout: 30000 });
       
-      setSearchResults(res.data);
+      setSearchResults({
+        ...res.data,
+        searchMode: searchMode
+      });
       
-      if (res.data.results.length === 0) {
+      if ((res.data.results && res.data.results.length === 0) || 
+          (res.data.documents && res.data.documents.length === 0)) {
         setError('No relevant information found for your query. Try rephrasing or using different keywords.');
       }
     } catch (err) {
-      let errorMessage = 'Failed to search knowledge graph';
+      let errorMessage = `Failed to search ${searchMode === 'hybrid' ? 'documents and knowledge graph' : searchMode === 'documents' ? 'documents' : 'knowledge graph'}`;
       
       if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
         errorMessage = 'Cannot connect to backend server. Please ensure the backend is running on port 8000.';
@@ -225,13 +237,63 @@ function App() {
       
       {/* Search Interface */}
       <div style={{ marginBottom: 20, padding: 20, border: '1px solid #ddd', borderRadius: 8 }}>
-        <h2>Search Knowledge Graph</h2>
+        <h2>🔍 AI-Powered Search</h2>
+        
+        {/* Search Mode Selector */}
+        <div style={{ marginBottom: 15 }}>
+          <label style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 8, display: 'block' }}>
+            Search Mode:
+          </label>
+          <div style={{ display: 'flex', gap: 15 }}>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                value="hybrid"
+                checked={searchMode === 'hybrid'}
+                onChange={(e) => setSearchMode(e.target.value)}
+                style={{ marginRight: 5 }}
+              />
+              <span style={{ color: searchMode === 'hybrid' ? '#007bff' : '#666' }}>
+                🔗 Hybrid Search (Documents + Knowledge Graph)
+              </span>
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                value="documents"
+                checked={searchMode === 'documents'}
+                onChange={(e) => setSearchMode(e.target.value)}
+                style={{ marginRight: 5 }}
+              />
+              <span style={{ color: searchMode === 'documents' ? '#007bff' : '#666' }}>
+                📄 Documents Only
+              </span>
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                value="knowledge-graph"
+                checked={searchMode === 'knowledge-graph'}
+                onChange={(e) => setSearchMode(e.target.value)}
+                style={{ marginRight: 5 }}
+              />
+              <span style={{ color: searchMode === 'knowledge-graph' ? '#007bff' : '#666' }}>
+                🕸️ Knowledge Graph Only
+              </span>
+            </label>
+          </div>
+        </div>
+        
         <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Ask a question about the knowledge graph..."
+            placeholder={
+              searchMode === 'hybrid' ? "Ask about investments, company strategies, or business trends..." :
+              searchMode === 'documents' ? "Search investment reports and business documents..." :
+              "Ask about companies, people, and their relationships..."
+            }
             style={{ 
               flex: 1, 
               padding: 12, 
@@ -273,41 +335,371 @@ function App() {
           borderRadius: 5,
           border: '1px solid #e9ecef'
         }}>
-          💡 <strong>Search Tips:</strong> Try queries like "What companies are in tech?", "Who works at Google?", or "What topics are discussed?"
+          💡 <strong>Try these examples:</strong>
+          {searchMode === 'hybrid' && (
+            <span> "Apple's investments for 2025", "Tesla's energy storage plans", "Meta's metaverse strategy"</span>
+          )}
+          {searchMode === 'documents' && (
+            <span> "Cloud infrastructure investment", "AI research funding", "Renewable energy projects"</span>
+          )}
+          {searchMode === 'knowledge-graph' && (
+            <span> "Who works at Google?", "What companies are in tech?", "Show me AI researchers"</span>
+          )}
         </div>
         
         {/* Search Results */}
         {searchResults && (
           <div style={{ marginTop: 20 }}>
-            <h3>Answer:</h3>
+            {/* Results Header */}
             <div style={{ 
-              padding: 15, 
-              backgroundColor: '#f5f5f5', 
-              borderRadius: 5, 
-              marginBottom: 15,
-              fontSize: 16,
-              lineHeight: 1.5
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: 15
             }}>
-              {searchResults.answer}
+              <h3 style={{ color: '#2c3e50', margin: 0 }}>
+                {searchResults.searchMode === 'hybrid' && '🔗 Hybrid Search Results'}
+                {searchResults.searchMode === 'documents' && '📄 Document Search Results'}
+                {searchResults.searchMode === 'knowledge-graph' && '🕸️ Knowledge Graph Results'}
+              </h3>
+              <div style={{ 
+                fontSize: 12,
+                color: '#6c757d',
+                backgroundColor: '#f8f9fa',
+                padding: '4px 8px',
+                borderRadius: 4,
+                border: '1px solid #e9ecef'
+              }}>
+                {searchResults.documents ? `${searchResults.documents.length} documents` : 
+                 searchResults.results ? `${searchResults.results.length} results` : '0 results'} found
+              </div>
             </div>
-            
-            <h4>Related Nodes (Relevance Score):</h4>
-            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
-              {searchResults.results.map((result, index) => (
-                <div key={index} style={{ 
-                  padding: 10, 
-                  margin: '5px 0', 
-                  border: '1px solid #ccc',
-                  borderRadius: 5,
-                  backgroundColor: '#fafafa'
+
+            {/* Generated Answer (for hybrid and knowledge graph search) */}
+            {searchResults.answer && (
+              <>
+                <h4 style={{ color: '#2c3e50', borderBottom: '2px solid #3498db', paddingBottom: 8 }}>
+                  📝 AI-Generated Answer
+                </h4>
+                <div style={{ 
+                  padding: 20, 
+                  backgroundColor: '#f8f9fa', 
+                  borderRadius: 8, 
+                  marginBottom: 20,
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  border: '1px solid #e9ecef',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
-                  <strong>{result.node.text}</strong>
-                  <span style={{ color: '#666', fontSize: 14, marginLeft: 10 }}>
-                    (Score: {result.similarity.toFixed(3)})
-                  </span>
+                  {searchResults.answer}
+                </div>
+              </>
+            )}
+            
+            {/* Citations */}
+            {searchResults.citations && searchResults.citations.length > 0 && (
+              <div style={{ marginBottom: 20 }}>
+                <h4 style={{ color: '#2c3e50', marginBottom: 10 }}>📚 Sources & Citations</h4>
+                <div style={{ 
+                  backgroundColor: '#fff3cd', 
+                  border: '1px solid #ffeaa7',
+                  borderRadius: 6,
+                  padding: 15
+                }}>
+                  {searchResults.citations.map((citation, index) => (
+                    <div key={index} style={{ 
+                      marginBottom: 8,
+                      paddingBottom: 8,
+                      borderBottom: index < searchResults.citations.length - 1 ? '1px solid #ffeaa7' : 'none'
+                    }}>
+                      <strong>[{index + 1}]</strong> {citation.title || citation.source}
+                      {citation.authors && (
+                        <div style={{ fontSize: 14, color: '#6c757d', marginTop: 2 }}>
+                          Authors: {Array.isArray(citation.authors) ? citation.authors.join(', ') : citation.authors}
+                        </div>
+                      )}
+                      {(citation.year || citation.venue) && (
+                        <div style={{ fontSize: 14, color: '#6c757d', marginTop: 2 }}>
+                          {citation.venue && `${citation.venue}`}{citation.year && ` (${citation.year})`}
+                        </div>
+                      )}
+                      {citation.doi && citation.doi !== 'N/A' && (
+                        <div style={{ fontSize: 12, color: '#007bff', marginTop: 2 }}>
+                          DOI: {citation.doi}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Document Results (for hybrid and document-only search) */}
+            {searchResults.documents && searchResults.documents.length > 0 && (
+              <>
+                <h4 style={{ color: '#2c3e50', marginBottom: 10 }}>📄 Relevant Documents</h4>
+                <div style={{ maxHeight: 400, overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: 6, marginBottom: 20 }}>
+                  {searchResults.documents.map((doc, index) => (
+                    <div key={index} style={{ 
+                      padding: 15, 
+                      margin: 0,
+                      borderBottom: index < searchResults.documents.length - 1 ? '1px solid #e9ecef' : 'none',
+                      backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa'
+                    }}>
+                      <div style={{ 
+                        fontWeight: 'bold', 
+                        marginBottom: 8,
+                        color: '#2c3e50',
+                        fontSize: 16
+                      }}>
+                        {doc.title}
+                      </div>
+                      
+                      {/* Document metadata */}
+                      <div style={{ marginBottom: 8 }}>
+                        <span style={{
+                          display: 'inline-block',
+                          backgroundColor: '#6f42c1',
+                          color: 'white',
+                          padding: '2px 8px',
+                          borderRadius: 12,
+                          fontSize: 12,
+                          marginRight: 8,
+                          fontWeight: 'bold'
+                        }}>
+                          Document
+                        </span>
+                        {doc.metadata?.type && (
+                          <span style={{
+                            display: 'inline-block',
+                            backgroundColor: '#17a2b8',
+                            color: 'white',
+                            padding: '2px 8px',
+                            borderRadius: 12,
+                            fontSize: 12,
+                            marginRight: 8
+                          }}>
+                            {doc.metadata.type.replace('_', ' ').toUpperCase()}
+                          </span>
+                        )}
+                        {doc.metadata?.date && (
+                          <span style={{ fontSize: 12, color: '#6c757d' }}>
+                            📅 {doc.metadata.date}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Document content preview */}
+                      {doc.content && (
+                        <div style={{ 
+                          fontSize: 14, 
+                          color: '#495057', 
+                          marginBottom: 8,
+                          maxHeight: '100px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>
+                          {doc.content.length > 300 ? 
+                            `${doc.content.substring(0, 300)}...` : 
+                            doc.content}
+                        </div>
+                      )}
+                      
+                      {/* Additional metadata */}
+                      {doc.metadata?.companies && (
+                        <div style={{ fontSize: 12, color: '#6c757d', marginBottom: 3 }}>
+                          🏢 Companies: {doc.metadata.companies}
+                        </div>
+                      )}
+                      {doc.metadata?.amount && (
+                        <div style={{ fontSize: 12, color: '#28a745', fontWeight: 'bold' }}>
+                          💰 Investment: {doc.metadata.amount}
+                        </div>
+                      )}
+                      
+                      {/* Similarity score */}
+                      <div style={{ 
+                        textAlign: 'right',
+                        marginTop: 8
+                      }}>
+                        <span style={{ 
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          color: doc.similarity > 0.7 ? '#28a745' : 
+                                 doc.similarity > 0.5 ? '#ffc107' : '#dc3545',
+                          backgroundColor: '#f8f9fa',
+                          padding: '2px 6px',
+                          borderRadius: 4,
+                          border: '1px solid #e9ecef'
+                        }}>
+                          {(doc.similarity * 100).toFixed(1)}% Match
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+            
+            {/* Document-only search results */}
+            {searchResults.searchMode === 'documents' && searchResults.results && (
+              <>
+                <h4 style={{ color: '#2c3e50', marginBottom: 10 }}>📄 Document Search Results</h4>
+                <div style={{ maxHeight: 400, overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: 6, marginBottom: 20 }}>
+                  {searchResults.results.map((result, index) => (
+                    <div key={index} style={{ 
+                      padding: 15, 
+                      margin: 0,
+                      borderBottom: index < searchResults.results.length - 1 ? '1px solid #e9ecef' : 'none',
+                      backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa'
+                    }}>
+                      <div style={{ 
+                        fontWeight: 'bold', 
+                        marginBottom: 8,
+                        color: '#2c3e50',
+                        fontSize: 16
+                      }}>
+                        {result.metadata?.title || 'Document'}
+                      </div>
+                      
+                      <div style={{ 
+                        fontSize: 14, 
+                        color: '#495057', 
+                        marginBottom: 8,
+                        maxHeight: '100px',
+                        overflow: 'hidden'
+                      }}>
+                        {result.content?.length > 300 ? 
+                          `${result.content.substring(0, 300)}...` : 
+                          result.content}
+                      </div>
+                      
+                      <div style={{ 
+                        textAlign: 'right'
+                      }}>
+                        <span style={{ 
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          color: result.similarity > 0.7 ? '#28a745' : 
+                                 result.similarity > 0.5 ? '#ffc107' : '#dc3545'
+                        }}>
+                          {((1 - result.distance) * 100).toFixed(1)}% Match
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+            
+            {/* Knowledge Graph Results */}
+            {searchResults.results && searchResults.searchMode !== 'documents' && (
+              <>
+                <h4 style={{ color: '#2c3e50', marginBottom: 10 }}>🔍 Related Knowledge Graph Nodes</h4>
+                <div style={{ maxHeight: 300, overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: 6 }}>
+                  {searchResults.results.map((result, index) => (
+                <div key={index} style={{ 
+                  padding: 15, 
+                  margin: 0,
+                  borderBottom: index < searchResults.results.length - 1 ? '1px solid #e9ecef' : 'none',
+                  backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start'
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ 
+                      fontWeight: 'bold', 
+                      marginBottom: 5,
+                      color: '#2c3e50'
+                    }}>
+                      {result.node.name || result.node.title || result.node.text}
+                    </div>
+                    
+                    {/* Node type badges */}
+                    <div style={{ marginBottom: 8 }}>
+                      {result.node.labels.map((label, labelIndex) => (
+                        <span key={labelIndex} style={{
+                          display: 'inline-block',
+                          backgroundColor: 
+                            label === 'Company' ? '#007bff' :
+                            label === 'Person' ? '#28a745' :
+                            label === 'Topic' ? '#ffc107' :
+                            label === 'Document' ? '#6f42c1' : '#6c757d',
+                          color: 'white',
+                          padding: '2px 8px',
+                          borderRadius: 12,
+                          fontSize: 12,
+                          marginRight: 5,
+                          fontWeight: 'bold'
+                        }}>
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    {/* Additional node information */}
+                    {result.node.industry && (
+                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
+                        Industry: {result.node.industry}
+                      </div>
+                    )}
+                    {result.node.role && (
+                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
+                        Role: {result.node.role}
+                      </div>
+                    )}
+                    {result.node.authors && (
+                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
+                        Authors: {Array.isArray(result.node.authors) ? 
+                          result.node.authors.slice(0, 3).join(', ') + (result.node.authors.length > 3 ? '...' : '') : 
+                          result.node.authors}
+                      </div>
+                    )}
+                    {result.node.year && (
+                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
+                        Year: {result.node.year}
+                      </div>
+                    )}
+                    {result.node.description && (
+                      <div style={{ 
+                        fontSize: 14, 
+                        color: '#495057', 
+                        marginTop: 8,
+                        fontStyle: 'italic',
+                        maxHeight: '60px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        {result.node.description.length > 150 ? 
+                          `${result.node.description.substring(0, 150)}...` : 
+                          result.node.description}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div style={{ 
+                    marginLeft: 15,
+                    textAlign: 'center',
+                    minWidth: '80px'
+                  }}>
+                    <div style={{ 
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: result.similarity > 0.7 ? '#28a745' : 
+                             result.similarity > 0.5 ? '#ffc107' : '#dc3545'
+                    }}>
+                      {(result.similarity * 100).toFixed(1)}%
+                    </div>
+                    <div style={{ fontSize: 12, color: '#6c757d' }}>
+                      Relevance
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
+              </>
+            )}
           </div>
         )}
       </div>

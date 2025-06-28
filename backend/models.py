@@ -13,15 +13,32 @@ class NodeData(BaseModel):
     title: Optional[str] = None
     industry: Optional[str] = None
     topic: Optional[str] = None
+    description: Optional[str] = None
+    content: Optional[str] = None
+    authors: Optional[List[str]] = None
+    year: Optional[int] = None
+    venue: Optional[str] = None
+    type: Optional[str] = None
+    citations: Optional[int] = None
+    doi: Optional[str] = None
 
 class SearchResult(BaseModel):
     node: NodeData
     similarity: float
 
+class Citation(BaseModel):
+    source: str
+    title: Optional[str] = None
+    authors: Optional[List[str]] = None
+    year: Optional[int] = None
+    venue: Optional[str] = None
+    doi: Optional[str] = None
+    
 class SearchResponse(BaseModel):
     query: str
     results: List[SearchResult]
     answer: str
+    citations: List[Citation] = []
 
 class GraphNode(BaseModel):
     id: int

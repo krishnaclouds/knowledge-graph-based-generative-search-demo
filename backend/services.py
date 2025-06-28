@@ -7,7 +7,7 @@ from anthropic import Anthropic
 
 from config import get_settings
 from database import db
-from models import NodeData, SearchResult
+from models import NodeData, SearchResult, Citation
 
 logger = logging.getLogger(__name__)
 
@@ -42,15 +42,26 @@ class LLMService:
     def generate_answer(self, query: str, context_text: str) -> str:
         """Generate answer using LLM"""
         try:
+            system_prompt = """You are a knowledgeable research assistant that answers questions based on the provided knowledge graph information. 
+
+Guidelines:
+- Use only the information provided in the knowledge graph context
+- Be comprehensive yet concise in your responses
+- When referencing specific information from documents, companies, or research papers, mention the source naturally in your answer
+- Provide factual, well-structured responses
+- If multiple sources contain relevant information, synthesize them coherently
+- Focus on accuracy and cite specific details when available (e.g., years, statistics, names)
+- If the information is insufficient to fully answer the question, acknowledge this limitation"""
+
             response = self.client.messages.create(
                 model=self.settings.anthropic_model,
                 max_tokens=self.settings.max_tokens,
                 temperature=self.settings.temperature,
-                system="You are a helpful assistant that answers questions based on the provided knowledge graph information. Use only the information provided and be concise and accurate.",
+                system=system_prompt,
                 messages=[
                     {
                         "role": "user",
-                        "content": f"Based on the following knowledge graph information, please answer this question: {query}\\n\\n{context_text}"
+                        "content": f"Question: {query}\\n\\nKnowledge Graph Context:\\n{context_text}\\n\\nPlease provide a comprehensive answer based on this information:"
                     }
                 ]
             )
@@ -79,14 +90,24 @@ class SearchService:
             for node in nodes:
                 # Build text content for embedding
                 text_content = ""
-                if node["name"]:
+                if node.get("name"):
                     text_content += f"Name: {node['name']} "
-                if node["title"]:
+                if node.get("title"):
                     text_content += f"Title: {node['title']} "
-                if node["industry"]:
+                if node.get("industry"):
                     text_content += f"Industry: {node['industry']} "
-                if node["topic"]:
+                if node.get("topic"):
                     text_content += f"Topic: {node['topic']} "
+                if node.get("description"):
+                    text_content += f"Description: {node['description']} "
+                if node.get("content"):
+                    # Include first 500 chars of content for embedding
+                    content_snippet = node['content'][:500] if len(node['content']) > 500 else node['content']
+                    text_content += f"Content: {content_snippet} "
+                if node.get("authors"):
+                    text_content += f"Authors: {', '.join(node['authors'])} "
+                if node.get("venue"):
+                    text_content += f"Venue: {node['venue']} "
                 
                 label = node["labels"][0] if node["labels"] else "Node"
                 text_content += f"Type: {label}"
@@ -95,10 +116,18 @@ class SearchService:
                     id=node["id"],
                     text=text_content.strip(),
                     labels=node["labels"],
-                    name=node["name"],
-                    title=node["title"],
-                    industry=node["industry"],
-                    topic=node["topic"]
+                    name=node.get("name"),
+                    title=node.get("title"),
+                    industry=node.get("industry"),
+                    topic=node.get("topic"),
+                    description=node.get("description"),
+                    content=node.get("content"),
+                    authors=node.get("authors"),
+                    year=node.get("year"),
+                    venue=node.get("venue"),
+                    type=node.get("type"),
+                    citations=node.get("citations"),
+                    doi=node.get("doi")
                 )
                 
                 node_data.append(node_obj)
@@ -138,6 +167,32 @@ class SearchService:
             logger.error(f"Failed to perform semantic search: {e}")
             raise
     
+    def extract_citations(self, search_results: List[SearchResult]) -> List[Citation]:
+        """Extract citations from search results"""
+        citations = []
+        seen_sources = set()
+        
+        for result in search_results:
+            node = result.node
+            
+            # Only create citations for Document nodes or nodes with substantial research content
+            if "Document" in node.labels or (node.authors and node.year):
+                source_key = node.title or node.name or "Unknown"
+                
+                if source_key not in seen_sources:
+                    citation = Citation(
+                        source=source_key,
+                        title=node.title,
+                        authors=node.authors,
+                        year=node.year,
+                        venue=node.venue,
+                        doi=node.doi
+                    )
+                    citations.append(citation)
+                    seen_sources.add(source_key)
+        
+        return citations
+
     def build_context_text(self, search_results: List[SearchResult]) -> str:
         """Build context text from search results"""
         if not search_results:
@@ -149,7 +204,39 @@ class SearchService:
             node = result.node
             similarity = result.similarity
             
-            context_text += f"{i}. {node.text} (Relevance: {similarity:.2f})\\n"
+            # Build comprehensive node information
+            context_info = f"{i}. "
+            if node.name:
+                context_info += f"Name: {node.name}"
+            elif node.title:
+                context_info += f"Title: {node.title}"
+            else:
+                context_info += node.text
+            
+            context_info += f" (Type: {', '.join(node.labels)}, Relevance: {similarity:.2f})\\n"
+            
+            # Add detailed information
+            if node.description:
+                context_info += f"   Description: {node.description}\\n"
+            
+            if node.content:
+                # Include more content for better context
+                content_snippet = node.content[:1000] if len(node.content) > 1000 else node.content
+                context_info += f"   Content: {content_snippet}\\n"
+            
+            if node.industry:
+                context_info += f"   Industry: {node.industry}\\n"
+            
+            if node.authors:
+                context_info += f"   Authors: {', '.join(node.authors)}\\n"
+            
+            if node.year:
+                context_info += f"   Year: {node.year}\\n"
+            
+            if node.venue:
+                context_info += f"   Venue: {node.venue}\\n"
+            
+            context_text += context_info
             
             try:
                 node_context = db.get_node_context(node.id)
@@ -171,7 +258,7 @@ class SearchService:
         return context_text
     
     def search_and_answer(self, query: str, max_results: int = 5) -> Dict[str, Any]:
-        """Perform search and generate answer"""
+        """Perform search and generate answer with citations"""
         try:
             search_results = self.semantic_search(query, max_results)
             
@@ -179,16 +266,19 @@ class SearchService:
                 return {
                     "query": query,
                     "results": [],
-                    "answer": "No relevant information found in the knowledge graph."
+                    "answer": "No relevant information found in the knowledge graph.",
+                    "citations": []
                 }
             
             context_text = self.build_context_text(search_results)
             answer = self.llm_service.generate_answer(query, context_text)
+            citations = self.extract_citations(search_results)
             
             return {
                 "query": query,
                 "results": [result.dict() for result in search_results],
-                "answer": answer
+                "answer": answer,
+                "citations": [citation.dict() for citation in citations]
             }
             
         except Exception as e:
