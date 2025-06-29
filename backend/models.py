@@ -58,3 +58,28 @@ class HealthStatus(BaseModel):
     status: str
     db: Optional[int] = None
     detail: Optional[str] = None
+
+# LLM Judge Models
+class SourceCounts(BaseModel):
+    documents: int = 0
+    citations: int = 0
+    knowledge_graph: int = 0
+
+class SearchSummary(BaseModel):
+    summary: str
+    source_counts: SourceCounts
+
+class EvaluationRequest(BaseModel):
+    query: str
+    hybrid: SearchSummary
+    documents_only: SearchSummary
+
+class CriteriaScores(BaseModel):
+    summary_a: int = Field(..., ge=1, le=10)
+    summary_b: int = Field(..., ge=1, le=10)
+
+class EvaluationResponse(BaseModel):
+    winner: str = Field(..., pattern="^(summary_a|summary_b)$")
+    confidence: int = Field(..., ge=1, le=100)
+    reasoning: str
+    criteria_scores: Dict[str, CriteriaScores]
