@@ -527,7 +527,7 @@ function App() {
                   padding: '8px 16px'
                 }}
               >
-                {loading ? '🔄 Loading...' : '📊 Load Knowledge Graph from Settings'}
+                {loading ? '🔄 Loading...' : '📊 Load Knowledge Graph'}
               </button>
               
               {connectionStatus === 'disconnected' && (

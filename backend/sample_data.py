@@ -230,7 +230,7 @@ def create_sample_data():
                     person_name=person["name"], company_name=person["company"]
                 )
             
-            # Create research documents and papers
+            # Create research documents and papers with more interconnected content
             documents_data = [
                 {
                     "title": "Attention Is All You Need",
@@ -241,7 +241,8 @@ def create_sample_data():
                     "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature.",
                     "content": "The Transformer, a model architecture eschewing recurrence and instead relying entirely on an attention mechanism to draw global dependencies between input and output. The Transformer allows for significantly more parallelization and can reach a new state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs. In this work we present the Transformer, the first transduction model relying entirely on self-attention to compute representations of its input and output without using sequence-aligned RNNs or convolution. The Transformer follows this overall architecture using stacked self-attention and point-wise, fully connected layers for both the encoder and decoder, shown in the left and right halves of Figure 1, respectively. Multi-Head Attention allows the model to jointly attend to information from different representation subspaces at different positions.",
                     "citations": 45000,
-                    "doi": "10.48550/arXiv.1706.03762"
+                    "doi": "10.48550/arXiv.1706.03762",
+                    "keywords": ["transformer", "attention mechanism", "neural networks", "natural language processing", "machine translation"]
                 },
                 {
                     "title": "Language Models are Few-Shot Learners",
@@ -252,7 +253,8 @@ def create_sample_data():
                     "abstract": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions – something which current NLP systems still largely struggle with. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.",
                     "content": "GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks, as well as several tasks that require on-the-fly reasoning or domain adaptation, such as unscrambling words, using a novel word in a sentence, or performing 3-digit arithmetic. We find that GPT-3's performance scales with model size across a wide range of tasks, and that models with tens of billions of parameters can match the performance of fine-tuned systems on some tasks. We also find that larger models exhibit an improved ability to learn from context (in-context learning), and we demonstrate this ability on a number of diverse tasks.",
                     "citations": 12000,
-                    "doi": "10.48550/arXiv.2005.14165"
+                    "doi": "10.48550/arXiv.2005.14165",
+                    "keywords": ["large language models", "few-shot learning", "GPT-3", "natural language processing", "transformer"]
                 },
                 {
                     "title": "Deep Learning",
@@ -263,7 +265,8 @@ def create_sample_data():
                     "abstract": "Deep learning is a form of machine learning that enables computers to learn from experience and understand the world in terms of a hierarchy of concepts. Because the computer gathers knowledge from experience, there is no need for a human computer operator to formally specify all the knowledge that the computer needs. The hierarchy of concepts allows the computer to learn complicated concepts by building them out of simpler ones; a graph of these hierarchies would be many layers deep. This book introduces a broad range of topics in deep learning.",
                     "content": "The Deep Learning textbook is a resource intended to help students and practitioners enter the field of machine learning in general and deep learning in particular. The online version of the book is now complete and will remain available online for free. The deep learning textbook can now be ordered on Amazon. For up to date errata, see the errata page. If you notice a mistake or have a suggestion, please do not hesitate to write to us at feedback@deeplearningbook.org. Deep learning is a form of machine learning that enables computers to learn from experience and understand the world in terms of a hierarchy of concepts.",
                     "citations": 35000,
-                    "doi": "N/A"
+                    "doi": "N/A",
+                    "keywords": ["deep learning", "neural networks", "machine learning", "artificial intelligence", "backpropagation"]
                 },
                 {
                     "title": "Tesla Autopilot: Full Self-Driving Capability Technical Report",
@@ -274,7 +277,68 @@ def create_sample_data():
                     "abstract": "This technical report describes Tesla's approach to autonomous driving, detailing the neural network architectures, training methodologies, and real-world deployment strategies used in Tesla Autopilot and Full Self-Driving (FSD) capability. The report covers the evolution from rule-based systems to end-to-end neural networks, the use of large-scale real-world driving data, and the challenges of scaling autonomous driving technology.",
                     "content": "Tesla's Autopilot represents one of the most advanced driver assistance systems currently deployed at scale. The system leverages a suite of cameras, ultrasonic sensors, and radar to provide 360-degree visibility around the vehicle. The neural networks powering Autopilot are trained on millions of miles of real-world driving data collected from Tesla's fleet. The architecture has evolved from modular, hand-engineered systems to increasingly end-to-end neural network approaches. Tesla's unique advantage lies in its ability to collect vast amounts of real-world driving data from its fleet of vehicles, enabling continuous improvement of the Autopilot system through over-the-air updates.",
                     "citations": 150,
-                    "doi": "N/A"
+                    "doi": "N/A",
+                    "keywords": ["autonomous driving", "computer vision", "neural networks", "electric vehicles", "self-driving cars"]
+                },
+                {
+                    "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+                    "authors": ["Jacob Devlin", "Ming-Wei Chang", "Kenton Lee", "Kristina Toutanova"],
+                    "year": 2018,
+                    "venue": "North American Chapter of the Association for Computational Linguistics (NAACL)",
+                    "type": "Research Paper",
+                    "abstract": "We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models, BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications.",
+                    "content": "BERT obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5% (7.7% point absolute improvement), MultiNLI accuracy to 86.7% (4.6% absolute improvement), SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement) and SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement). BERT's key technical innovation is applying the bidirectional training of Transformer to language modeling. This is in contrast to previous efforts which looked at a text sequence either from left to right or combined left-to-right and right-to-left training.",
+                    "citations": 28000,
+                    "doi": "10.48550/arXiv.1810.04805",
+                    "keywords": ["BERT", "bidirectional transformers", "language understanding", "pre-training", "natural language processing"]
+                },
+                {
+                    "title": "Generative Adversarial Networks",
+                    "authors": ["Ian Goodfellow", "Jean Pouget-Abadie", "Mehdi Mirza", "Bing Xu", "David Warde-Farley", "Sherjil Ozair", "Aaron Courville", "Yoshua Bengio"],
+                    "year": 2014,
+                    "venue": "Neural Information Processing Systems (NeurIPS)",
+                    "type": "Research Paper",
+                    "abstract": "We propose a new framework for estimating generative models via an adversarial process, in which we simultaneously train two models: a generative model G that captures the data distribution, and a discriminative model D that estimates the probability that a sample came from the training data rather than G. The training procedure for G is to maximize the probability of D making a mistake. This framework corresponds to a minimax two-player game. In the space of arbitrary functions G and D, a unique solution exists, with G recovering the training data distribution and D equal to 1/2 everywhere.",
+                    "content": "Generative adversarial networks (GANs) are a class of machine learning frameworks designed by Ian Goodfellow and his colleagues in 2014. Two neural networks contest with each other in a game (in the form of a zero-sum game, where one agent's gain is another agent's loss). Given a training set, this technique learns to generate new data with the same statistics as the training set. For example, a GAN trained on photographs can generate new photographs that look at least superficially authentic to human observers, having many realistic characteristics.",
+                    "citations": 25000,
+                    "doi": "10.48550/arXiv.1406.2661",
+                    "keywords": ["generative adversarial networks", "GANs", "generative models", "deep learning", "unsupervised learning"]
+                },
+                {
+                    "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+                    "authors": ["Alex Krizhevsky", "Ilya Sutskever", "Geoffrey E. Hinton"],
+                    "year": 2012,
+                    "venue": "Neural Information Processing Systems (NeurIPS)",
+                    "type": "Research Paper",
+                    "abstract": "We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5% and 17.0% which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully-connected layers with a final 1000-way softmax.",
+                    "content": "AlexNet is the name of a convolutional neural network (CNN), designed by Alex Krizhevsky, and published with Ilya Sutskever and Krizhevsky's PhD advisor Geoffrey Hinton. AlexNet competed in the ImageNet Large Scale Visual Recognition Challenge on September 30, 2012. The network achieved a top-5 error of 15.3%, more than 10.8 percentage points lower than that of the runner up. The original paper's primary result was that the depth of the model was essential for its high performance, which was computationally expensive, but made feasible due to the utilization of graphics processing units (GPUs) during training.",
+                    "citations": 42000,
+                    "doi": "10.1145/3065386",
+                    "keywords": ["AlexNet", "convolutional neural networks", "computer vision", "deep learning", "ImageNet"]
+                },
+                {
+                    "title": "Reinforcement Learning: An Introduction",
+                    "authors": ["Richard S. Sutton", "Andrew G. Barto"],
+                    "year": 2018,
+                    "venue": "MIT Press",
+                    "type": "Book",
+                    "abstract": "Reinforcement learning, one of the most active research areas in artificial intelligence, is a computational approach to learning whereby an agent tries to maximize the total amount of reward it receives while interacting with a complex, uncertain environment. In Reinforcement Learning, Richard Sutton and Andrew Barto provide a clear and simple account of the field's key ideas and algorithms.",
+                    "content": "This book provides a clear and simple account of the key ideas and algorithms of reinforcement learning. Their discussion ranges from the history of the field's intellectual foundations to the most recent developments and applications. The only necessary mathematical background is familiarity with elementary concepts of probability. The book is divided into three parts. Part I defines the reinforcement learning problem in terms of Markov decision processes. Part II provides basic solution methods: dynamic programming, Monte Carlo methods, and temporal-difference learning. Part III presents a unified view of the solution methods and incorporates artificial neural networks, eligibility traces, and planning.",
+                    "citations": 15000,
+                    "doi": "N/A",
+                    "keywords": ["reinforcement learning", "Markov decision processes", "temporal difference learning", "Q-learning", "policy gradient"]
+                },
+                {
+                    "title": "The Elements of Statistical Learning",
+                    "authors": ["Trevor Hastie", "Robert Tibshirani", "Jerome Friedman"],
+                    "year": 2009,
+                    "venue": "Springer",
+                    "type": "Book",
+                    "abstract": "During the past decade there has been an explosion in computation and information technology. With it have come vast amounts of data in a variety of fields such as medicine, biology, finance, and marketing. The challenge of understanding these data has led to the development of new tools in the field of statistics, and spawned new areas such as data mining, machine learning, and bioinformatics.",
+                    "content": "This book describes the important ideas in these areas in a common conceptual framework. While the approach is statistical, the emphasis is on concepts rather than mathematics. Many examples are given, with a liberal use of color graphics. It should be a valuable resource for statisticians and anyone interested in data mining in science or industry. The book's coverage is broad, from supervised learning (prediction) to unsupervised learning. The many topics include neural networks, support vector machines, classification trees and boosting---the first comprehensive treatment of this topic in any book.",
+                    "citations": 18000,
+                    "doi": "N/A",
+                    "keywords": ["statistical learning", "machine learning", "data mining", "supervised learning", "unsupervised learning"]
                 }
             ]
             
@@ -289,7 +353,8 @@ def create_sample_data():
                         abstract: $abstract,
                         content: $content,
                         citations: $citations,
-                        doi: $doi
+                        doi: $doi,
+                        keywords: $keywords
                     })""",
                     **doc
                 )
@@ -301,28 +366,80 @@ def create_sample_data():
                     "description": "AI research and development",
                     "content": "Artificial Intelligence (AI) is intelligence demonstrated by machines, in contrast to the natural intelligence displayed by humans and animals. Leading AI textbooks define the field as the study of 'intelligent agents': any device that perceives its environment and takes actions that maximize its chance of successfully achieving its goals. Colloquially, the term 'artificial intelligence' is often used to describe machines that mimic cognitive functions that humans associate with the human mind, such as learning and problem solving. As machines become increasingly capable, tasks considered to require intelligence are often removed from the definition of AI, a phenomenon known as the AI effect.",
                     "applications": ["Natural Language Processing", "Computer Vision", "Robotics", "Expert Systems", "Machine Learning"],
-                    "key_researchers": ["Alan Turing", "John McCarthy", "Marvin Minsky", "Geoffrey Hinton", "Yann LeCun"]
+                    "key_researchers": ["Alan Turing", "John McCarthy", "Marvin Minsky", "Geoffrey Hinton", "Yann LeCun"],
+                    "related_fields": ["Machine Learning", "Deep Learning", "Computer Vision", "Natural Language Processing", "Robotics"]
                 },
                 {
                     "name": "Machine Learning",
                     "description": "ML algorithms and applications",
                     "content": "Machine learning (ML) is a field of inquiry devoted to understanding and building methods that 'learn', that is, methods that leverage data to improve performance on some set of tasks. It is seen as a part of artificial intelligence. Machine learning algorithms build a model based on training data in order to make predictions or decisions without being explicitly programmed to do so. Machine learning algorithms are used in a wide variety of applications, such as in medicine, email filtering, speech recognition, and computer vision, where it is difficult or unfeasible to develop conventional algorithms to perform the needed tasks.",
                     "applications": ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Deep Learning", "Neural Networks"],
-                    "key_researchers": ["Arthur Samuel", "Tom Mitchell", "Andrew Ng", "Ian Goodfellow", "Yoshua Bengio"]
+                    "key_researchers": ["Arthur Samuel", "Tom Mitchell", "Andrew Ng", "Ian Goodfellow", "Yoshua Bengio"],
+                    "related_fields": ["Artificial Intelligence", "Deep Learning", "Statistics", "Computer Science", "Data Science"]
+                },
+                {
+                    "name": "Deep Learning",
+                    "description": "Neural networks with multiple layers",
+                    "content": "Deep learning is part of a broader family of machine learning methods based on artificial neural networks with representation learning. Learning can be supervised, semi-supervised or unsupervised. Deep learning architectures such as deep neural networks, deep belief networks, recurrent neural networks and convolutional neural networks have been applied to fields including computer vision, speech recognition, natural language processing, machine translation, bioinformatics and drug design, where they have produced results comparable to and in some cases surpassing human expert performance.",
+                    "applications": ["Convolutional Neural Networks", "Recurrent Neural Networks", "Transformer Models", "Generative Models", "Computer Vision"],
+                    "key_researchers": ["Geoffrey Hinton", "Yann LeCun", "Yoshua Bengio", "Ian Goodfellow", "Andrew Ng"],
+                    "related_fields": ["Machine Learning", "Artificial Intelligence", "Computer Vision", "Natural Language Processing"]
+                },
+                {
+                    "name": "Natural Language Processing",
+                    "description": "AI for understanding and generating human language",
+                    "content": "Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of understanding the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents as well as categorize and organize the documents themselves.",
+                    "applications": ["Machine Translation", "Sentiment Analysis", "Question Answering", "Text Summarization", "Language Models"],
+                    "key_researchers": ["Noam Chomsky", "Christopher Manning", "Dan Jurafsky", "Yoshua Bengio", "Yann LeCun"],
+                    "related_fields": ["Artificial Intelligence", "Machine Learning", "Deep Learning", "Linguistics", "Computer Science"]
+                },
+                {
+                    "name": "Computer Vision",
+                    "description": "AI for understanding visual information",
+                    "content": "Computer vision is an interdisciplinary scientific field that deals with how computers can gain high-level understanding from digital images or videos. From the perspective of engineering, it seeks to understand and automate tasks that the human visual system can do. Computer vision tasks include methods for acquiring, processing, analyzing and understanding digital images, and extraction of high-dimensional data from the real world in order to produce numerical or symbolic information.",
+                    "applications": ["Image Classification", "Object Detection", "Facial Recognition", "Medical Imaging", "Autonomous Vehicles"],
+                    "key_researchers": ["David Marr", "Takeo Kanade", "Jitendra Malik", "Andrew Zisserman", "Fei-Fei Li"],
+                    "related_fields": ["Artificial Intelligence", "Machine Learning", "Deep Learning", "Image Processing", "Pattern Recognition"]
                 },
                 {
                     "name": "Cloud Computing",
                     "description": "Cloud infrastructure and services",
                     "content": "Cloud computing is the on-demand availability of computer system resources, especially data storage and computing power, without direct active management by the user. Large clouds often have functions distributed over multiple locations, each location being a data center. Cloud computing relies on sharing of resources to achieve coherence and typically using a 'pay-as-you-go' model which can help in reducing capital expenses but may also lead to unexpected operating expenses for unaware users.",
                     "applications": ["Infrastructure as a Service", "Platform as a Service", "Software as a Service", "Serverless Computing", "Container Orchestration"],
-                    "key_researchers": ["Eric Schmidt", "John McCarthy", "J.C.R. Licklider"]
+                    "key_researchers": ["Eric Schmidt", "John McCarthy", "J.C.R. Licklider"],
+                    "related_fields": ["Distributed Computing", "Virtualization", "Network Computing", "Grid Computing"]
                 },
                 {
                     "name": "Electric Vehicles",
                     "description": "EV technology and market",
                     "content": "An electric vehicle (EV) is a vehicle that uses one or more electric motors for propulsion. It can be powered by a collector system, with electricity from extravehicular sources, or it can be powered autonomously by a battery. EVs include, but are not limited to, road and rail vehicles, surface and underwater vessels, electric aircraft and electric spacecraft. The term also refers to hybrid electric vehicles which combine a conventional internal combustion engine with an electric propulsion system.",
                     "applications": ["Battery Technology", "Charging Infrastructure", "Autonomous Driving", "Energy Storage", "Sustainable Transportation"],
-                    "key_researchers": ["Elon Musk", "John Goodenough", "Akira Yoshino", "Stanley Whittingham"]
+                    "key_researchers": ["Elon Musk", "John Goodenough", "Akira Yoshino", "Stanley Whittingham"],
+                    "related_fields": ["Autonomous Driving", "Battery Technology", "Sustainable Energy", "Transportation"]
+                },
+                {
+                    "name": "Autonomous Driving",
+                    "description": "Self-driving vehicle technology",
+                    "content": "An autonomous car is a vehicle capable of sensing its environment and operating without human involvement. A human passenger is not required to take control of the vehicle at any time, nor is a human passenger required to be present in the vehicle at all. An autonomous car can go anywhere a traditional car goes and do everything that an experienced human driver does. Autonomous cars use a variety of techniques to detect their surroundings, such as radar, lidar, GPS, odometry and computer vision.",
+                    "applications": ["Computer Vision", "Machine Learning", "Sensor Fusion", "Path Planning", "Control Systems"],
+                    "key_researchers": ["Sebastian Thrun", "Chris Urmson", "Andrej Karpathy", "Raquel Urtasun"],
+                    "related_fields": ["Electric Vehicles", "Computer Vision", "Machine Learning", "Robotics", "Control Theory"]
+                },
+                {
+                    "name": "Reinforcement Learning",
+                    "description": "Learning through interaction with environment",
+                    "content": "Reinforcement learning (RL) is an area of machine learning concerned with how intelligent agents ought to take actions in an environment in order to maximize the notion of cumulative reward. Reinforcement learning is one of three basic machine learning paradigms, alongside supervised learning and unsupervised learning. Reinforcement learning differs from supervised learning in that labeled input/output pairs need not be presented, and sub-optimal actions need not be explicitly corrected.",
+                    "applications": ["Game Playing", "Robotics", "Trading", "Resource Allocation", "Autonomous Systems"],
+                    "key_researchers": ["Richard Sutton", "Andrew Barto", "David Silver", "Sergey Levine"],
+                    "related_fields": ["Machine Learning", "Artificial Intelligence", "Control Theory", "Game Theory", "Dynamic Programming"]
+                },
+                {
+                    "name": "Quantum Computing",
+                    "description": "Computing using quantum mechanical phenomena",
+                    "content": "Quantum computing is the use of quantum phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers. Quantum computers are believed to be able to solve certain computational problems, such as integer factorization, substantially faster than classical computers. The study of quantum computing is a subfield of quantum information science.",
+                    "applications": ["Cryptography", "Optimization", "Machine Learning", "Drug Discovery", "Financial Modeling"],
+                    "key_researchers": ["Peter Shor", "Lov Grover", "John Preskill", "Seth Lloyd"],
+                    "related_fields": ["Physics", "Computer Science", "Mathematics", "Cryptography"]
                 }
             ]
             
@@ -333,7 +450,8 @@ def create_sample_data():
                         description: $description,
                         content: $content,
                         applications: $applications,
-                        key_researchers: $key_researchers
+                        key_researchers: $key_researchers,
+                        related_fields: $related_fields
                     })""",
                     **topic
                 )
@@ -341,18 +459,39 @@ def create_sample_data():
             # Create relationships between companies and topics
             company_topic_relations = [
                 ("Google", "Artificial Intelligence", "RESEARCHES"),
+                ("Google", "Machine Learning", "RESEARCHES"),
+                ("Google", "Deep Learning", "RESEARCHES"),
+                ("Google", "Natural Language Processing", "RESEARCHES"),
+                ("Google", "Computer Vision", "RESEARCHES"),
                 ("Google", "Cloud Computing", "PROVIDES"),
-                ("Apple", "Mobile Technology", "DEVELOPS"),
+                ("Google", "Quantum Computing", "RESEARCHES"),
+                ("Apple", "Machine Learning", "RESEARCHES"),
+                ("Apple", "Computer Vision", "RESEARCHES"),
                 ("Microsoft", "Cloud Computing", "PROVIDES"),
                 ("Microsoft", "Artificial Intelligence", "RESEARCHES"),
+                ("Microsoft", "Machine Learning", "RESEARCHES"),
+                ("Microsoft", "Natural Language Processing", "RESEARCHES"),
+                ("Microsoft", "Quantum Computing", "RESEARCHES"),
                 ("Tesla", "Electric Vehicles", "MANUFACTURES"),
+                ("Tesla", "Autonomous Driving", "DEVELOPS"),
+                ("Tesla", "Machine Learning", "RESEARCHES"),
+                ("Tesla", "Computer Vision", "RESEARCHES"),
                 ("OpenAI", "Artificial Intelligence", "RESEARCHES"),
                 ("OpenAI", "Machine Learning", "DEVELOPS"),
-                ("Meta", "Social Media", "OPERATES"),
+                ("OpenAI", "Deep Learning", "RESEARCHES"),
+                ("OpenAI", "Natural Language Processing", "RESEARCHES"),
+                ("OpenAI", "Reinforcement Learning", "RESEARCHES"),
                 ("Meta", "Artificial Intelligence", "RESEARCHES"),
-                ("Amazon", "E-commerce", "OPERATES"),
+                ("Meta", "Machine Learning", "RESEARCHES"),
+                ("Meta", "Deep Learning", "RESEARCHES"),
+                ("Meta", "Computer Vision", "RESEARCHES"),
+                ("Meta", "Natural Language Processing", "RESEARCHES"),
+                ("Amazon", "Machine Learning", "RESEARCHES"),
                 ("Amazon", "Cloud Computing", "PROVIDES"),
-                ("Netflix", "Streaming Technology", "PROVIDES")
+                ("Amazon", "Natural Language Processing", "RESEARCHES"),
+                ("Amazon", "Computer Vision", "RESEARCHES"),
+                ("Netflix", "Machine Learning", "RESEARCHES"),
+                ("Netflix", "Deep Learning", "RESEARCHES")
             ]
             
             for company, topic, relation in company_topic_relations:
@@ -368,12 +507,34 @@ def create_sample_data():
             document_topic_relations = [
                 ("Attention Is All You Need", "Artificial Intelligence", "RELATES_TO"),
                 ("Attention Is All You Need", "Machine Learning", "RELATES_TO"),
+                ("Attention Is All You Need", "Deep Learning", "RELATES_TO"),
+                ("Attention Is All You Need", "Natural Language Processing", "RELATES_TO"),
                 ("Language Models are Few-Shot Learners", "Artificial Intelligence", "RELATES_TO"),
                 ("Language Models are Few-Shot Learners", "Machine Learning", "RELATES_TO"),
+                ("Language Models are Few-Shot Learners", "Deep Learning", "RELATES_TO"),
+                ("Language Models are Few-Shot Learners", "Natural Language Processing", "RELATES_TO"),
                 ("Deep Learning", "Artificial Intelligence", "RELATES_TO"),
                 ("Deep Learning", "Machine Learning", "RELATES_TO"),
+                ("Deep Learning", "Deep Learning", "RELATES_TO"),
+                ("Deep Learning", "Computer Vision", "RELATES_TO"),
                 ("Tesla Autopilot: Full Self-Driving Capability Technical Report", "Electric Vehicles", "RELATES_TO"),
-                ("Tesla Autopilot: Full Self-Driving Capability Technical Report", "Artificial Intelligence", "RELATES_TO")
+                ("Tesla Autopilot: Full Self-Driving Capability Technical Report", "Autonomous Driving", "RELATES_TO"),
+                ("Tesla Autopilot: Full Self-Driving Capability Technical Report", "Computer Vision", "RELATES_TO"),
+                ("Tesla Autopilot: Full Self-Driving Capability Technical Report", "Machine Learning", "RELATES_TO"),
+                ("BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding", "Natural Language Processing", "RELATES_TO"),
+                ("BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding", "Deep Learning", "RELATES_TO"),
+                ("BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding", "Machine Learning", "RELATES_TO"),
+                ("Generative Adversarial Networks", "Deep Learning", "RELATES_TO"),
+                ("Generative Adversarial Networks", "Machine Learning", "RELATES_TO"),
+                ("Generative Adversarial Networks", "Computer Vision", "RELATES_TO"),
+                ("ImageNet Classification with Deep Convolutional Neural Networks", "Deep Learning", "RELATES_TO"),
+                ("ImageNet Classification with Deep Convolutional Neural Networks", "Computer Vision", "RELATES_TO"),
+                ("ImageNet Classification with Deep Convolutional Neural Networks", "Machine Learning", "RELATES_TO"),
+                ("Reinforcement Learning: An Introduction", "Reinforcement Learning", "RELATES_TO"),
+                ("Reinforcement Learning: An Introduction", "Machine Learning", "RELATES_TO"),
+                ("Reinforcement Learning: An Introduction", "Artificial Intelligence", "RELATES_TO"),
+                ("The Elements of Statistical Learning", "Machine Learning", "RELATES_TO"),
+                ("The Elements of Statistical Learning", "Artificial Intelligence", "RELATES_TO")
             ]
             
             for doc_title, topic_name, relation in document_topic_relations:
@@ -389,16 +550,89 @@ def create_sample_data():
             company_document_relations = [
                 ("OpenAI", "Language Models are Few-Shot Learners", "PUBLISHED"),
                 ("Tesla", "Tesla Autopilot: Full Self-Driving Capability Technical Report", "PUBLISHED"),
-                ("Google", "Attention Is All You Need", "PUBLISHED")
+                ("Google", "Attention Is All You Need", "PUBLISHED"),
+                ("Google", "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding", "PUBLISHED"),
+                ("Meta", "Generative Adversarial Networks", "RESEARCHED"),
+                ("Google", "ImageNet Classification with Deep Convolutional Neural Networks", "RESEARCHED")
             ]
             
             for company, doc_title, relation in company_document_relations:
                 session.run(
                     """
                     MATCH (c:Company {name: $company}), (d:Document {title: $doc_title})
-                    CREATE (c)-[:PUBLISHED]->(d)
+                    CREATE (c)-[:""" + relation + """]->(d)
                     """,
                     company=company, doc_title=doc_title
+                )
+            
+            # Create topic-to-topic relationships based on related fields
+            topic_relationships = [
+                ("Machine Learning", "Artificial Intelligence", "SUBFIELD_OF"),
+                ("Deep Learning", "Machine Learning", "SUBFIELD_OF"),
+                ("Natural Language Processing", "Artificial Intelligence", "SUBFIELD_OF"),
+                ("Computer Vision", "Artificial Intelligence", "SUBFIELD_OF"),
+                ("Reinforcement Learning", "Machine Learning", "SUBFIELD_OF"),
+                ("Autonomous Driving", "Electric Vehicles", "RELATED_TO"),
+                ("Autonomous Driving", "Computer Vision", "USES"),
+                ("Autonomous Driving", "Machine Learning", "USES"),
+                ("Deep Learning", "Computer Vision", "APPLIED_IN"),
+                ("Deep Learning", "Natural Language Processing", "APPLIED_IN"),
+                ("Machine Learning", "Cloud Computing", "DEPLOYED_ON"),
+                ("Quantum Computing", "Machine Learning", "ACCELERATES"),
+                ("Natural Language Processing", "Deep Learning", "USES"),
+                ("Computer Vision", "Deep Learning", "USES")
+            ]
+            
+            for topic1, topic2, relation in topic_relationships:
+                session.run(
+                    """
+                    MATCH (t1:Topic {name: $topic1}), (t2:Topic {name: $topic2})
+                    CREATE (t1)-[:""" + relation + """]->(t2)
+                    """,
+                    topic1=topic1, topic2=topic2
+                )
+            
+            # Create author relationships for documents
+            author_document_relations = [
+                ("Ian Goodfellow", "Deep Learning", "AUTHORED"),
+                ("Ian Goodfellow", "Generative Adversarial Networks", "AUTHORED"),
+                ("Yoshua Bengio", "Deep Learning", "AUTHORED"),
+                ("Yoshua Bengio", "Generative Adversarial Networks", "AUTHORED"),
+                ("Geoffrey E. Hinton", "ImageNet Classification with Deep Convolutional Neural Networks", "AUTHORED"),
+                ("Richard S. Sutton", "Reinforcement Learning: An Introduction", "AUTHORED"),
+                ("Andrew G. Barto", "Reinforcement Learning: An Introduction", "AUTHORED")
+            ]
+            
+            # Create researcher nodes first
+            researchers = [
+                {"name": "Ian Goodfellow", "affiliation": "Google DeepMind", "field": "Deep Learning"},
+                {"name": "Yoshua Bengio", "affiliation": "University of Montreal", "field": "Deep Learning"},
+                {"name": "Geoffrey E. Hinton", "affiliation": "University of Toronto", "field": "Deep Learning"},
+                {"name": "Richard S. Sutton", "affiliation": "University of Alberta", "field": "Reinforcement Learning"},
+                {"name": "Andrew G. Barto", "affiliation": "University of Massachusetts", "field": "Reinforcement Learning"},
+                {"name": "Yann LeCun", "affiliation": "Meta AI", "field": "Deep Learning"},
+                {"name": "Andrew Ng", "affiliation": "Stanford University", "field": "Machine Learning"},
+                {"name": "Fei-Fei Li", "affiliation": "Stanford University", "field": "Computer Vision"}
+            ]
+            
+            for researcher in researchers:
+                session.run(
+                    """CREATE (:Researcher {
+                        name: $name,
+                        affiliation: $affiliation,
+                        field: $field
+                    })""",
+                    **researcher
+                )
+            
+            # Create author-document relationships
+            for author, doc_title, relation in author_document_relations:
+                session.run(
+                    """
+                    MATCH (r:Researcher {name: $author}), (d:Document {title: $doc_title})
+                    CREATE (r)-[:""" + relation + """]->(d)
+                    """,
+                    author=author, doc_title=doc_title
                 )
             
             # Create some collaboration relationships
@@ -407,34 +641,47 @@ def create_sample_data():
                 ("Microsoft", "OpenAI", "PARTNERS_WITH"),
                 ("Apple", "Google", "COMPETES_WITH"),
                 ("Tesla", "Google", "COLLABORATES_WITH"),
-                ("Meta", "Microsoft", "COMPETES_WITH")
+                ("Meta", "Microsoft", "COMPETES_WITH"),
+                ("Amazon", "Microsoft", "COMPETES_WITH"),
+                ("Google", "Microsoft", "COMPETES_WITH"),
+                ("Apple", "Microsoft", "COMPETES_WITH"),
+                ("Meta", "Google", "COMPETES_WITH"),
+                ("Tesla", "Apple", "COLLABORATES_WITH")
             ]
             
             for company1, company2, relation in collaborations:
-                if relation == "COLLABORATES_WITH":
-                    session.run(
-                        """
-                        MATCH (c1:Company {name: $company1}), (c2:Company {name: $company2})
-                        CREATE (c1)-[:COLLABORATES_WITH]->(c2)
-                        """,
-                        company1=company1, company2=company2
-                    )
-                elif relation == "PARTNERS_WITH":
-                    session.run(
-                        """
-                        MATCH (c1:Company {name: $company1}), (c2:Company {name: $company2})
-                        CREATE (c1)-[:PARTNERS_WITH]->(c2)
-                        """,
-                        company1=company1, company2=company2
-                    )
-                elif relation == "COMPETES_WITH":
-                    session.run(
-                        """
-                        MATCH (c1:Company {name: $company1}), (c2:Company {name: $company2})
-                        CREATE (c1)-[:COMPETES_WITH]->(c2)
-                        """,
-                        company1=company1, company2=company2
-                    )
+                session.run(
+                    """
+                    MATCH (c1:Company {name: $company1}), (c2:Company {name: $company2})
+                    CREATE (c1)-[:""" + relation + """]->(c2)
+                    """,
+                    company1=company1, company2=company2
+                )
+            
+            # Create researcher-topic relationships
+            researcher_topic_relations = [
+                ("Ian Goodfellow", "Deep Learning", "SPECIALIZES_IN"),
+                ("Ian Goodfellow", "Machine Learning", "SPECIALIZES_IN"),
+                ("Yoshua Bengio", "Deep Learning", "SPECIALIZES_IN"),
+                ("Yoshua Bengio", "Artificial Intelligence", "SPECIALIZES_IN"),
+                ("Geoffrey E. Hinton", "Deep Learning", "SPECIALIZES_IN"),
+                ("Geoffrey E. Hinton", "Computer Vision", "SPECIALIZES_IN"),
+                ("Richard S. Sutton", "Reinforcement Learning", "SPECIALIZES_IN"),
+                ("Andrew G. Barto", "Reinforcement Learning", "SPECIALIZES_IN"),
+                ("Yann LeCun", "Deep Learning", "SPECIALIZES_IN"),
+                ("Yann LeCun", "Computer Vision", "SPECIALIZES_IN"),
+                ("Andrew Ng", "Machine Learning", "SPECIALIZES_IN"),
+                ("Fei-Fei Li", "Computer Vision", "SPECIALIZES_IN")
+            ]
+            
+            for researcher, topic, relation in researcher_topic_relations:
+                session.run(
+                    """
+                    MATCH (r:Researcher {name: $researcher}), (t:Topic {name: $topic})
+                    CREATE (r)-[:""" + relation + """]->(t)
+                    """,
+                    researcher=researcher, topic=topic
+                )
             
         logger.info("Sample data created successfully")
         
