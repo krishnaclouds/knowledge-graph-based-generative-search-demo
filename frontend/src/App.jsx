@@ -13,7 +13,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [searchMode, setSearchMode] = useState('hybrid'); // 'hybrid', 'knowledge-graph', 'documents', 'comparison'
+  const [searchMode, setSearchMode] = useState('graphrag'); // 'graphrag', 'traditional-rag', 'knowledge-graph-only', 'comparison'
   const [connectionStatus, setConnectionStatus] = useState('unknown');
   const [retryCount, setRetryCount] = useState(0);
   const [comparisonResults, setComparisonResults] = useState(null);
@@ -87,163 +87,126 @@ function App() {
         max_results: 8
       };
       
-      // Run both hybrid and documents-only searches in parallel
+      // Run both GraphRAG and Traditional RAG searches in parallel
       console.log('🔍 Running comparison searches for:', searchQuery.trim());
       
-      const [hybridRes, documentsRes] = await Promise.all([
-        axios.post(`${API_BASE_URL}/hybrid-search`, requestBody, { timeout: 30000 }),
-        axios.post(`${API_BASE_URL}/documents/search`, requestBody, { timeout: 30000 })
+      const [graphragRes, traditionalRes] = await Promise.all([
+        axios.post(`${API_BASE_URL}/graphrag-search`, requestBody, { timeout: 30000 }),
+        axios.post(`${API_BASE_URL}/traditional-rag-search`, requestBody, { timeout: 30000 })
       ]);
       
-      console.log('📊 Hybrid result:', hybridRes.data);
-      console.log('📄 Documents result:', documentsRes.data);
+      console.log('🔗 GraphRAG result:', graphragRes.data);
+      console.log('📄 Traditional RAG result:', traditionalRes.data);
       
-      // Create citations from document metadata for documents-only mode
-      const documentCitations = documentsRes.data.results?.map(doc => ({
-        source: doc.metadata?.source || 'Unknown Source',
-        title: doc.metadata?.title || 'Untitled Document',
-        authors: doc.metadata?.authors ? doc.metadata.authors.split(', ') : [],
-        year: doc.metadata?.year || null,
-        venue: doc.metadata?.venue || null,
-        doi: doc.metadata?.doi || null,
-        type: doc.metadata?.type || 'document'
-      })) || [];
-
-      // Create enhanced comparison data
+      // Create enhanced comparison data with new search modes
       const comparison = {
-        hybrid: {
-          ...hybridRes.data,
-          searchMode: 'hybrid'
+        graphrag: {
+          ...graphragRes.data,
+          searchMode: 'graphrag'
         },
-        documentsOnly: {
-          // Use LLM-generated answer from documents-only endpoint
-          answer: documentsRes.data.answer || 'No relevant documents found for this query.',
-          documents: documentsRes.data.results || [],
-          citations: documentsRes.data.citations || documentCitations,
-          results: documentsRes.data.results || [],
-          searchMode: 'documents'
+        traditional_rag: {
+          ...traditionalRes.data,
+          searchMode: 'traditional_rag'
         },
         query: searchQuery.trim()
       };
       
       console.log('🔀 Enhanced comparison data:', comparison);
-      console.log('📄 Documents-only LLM summary:', documentsRes.data.answer ? 'Generated' : 'Fallback used');
-      console.log('📚 Documents-only citations:', documentsRes.data.citations?.length || documentCitations.length, 'citations');
+      
+      // Validate comparison data structure
+      if (!comparison.graphrag) {
+        console.error('❌ Missing graphrag data in comparison results');
+      }
+      if (!comparison.traditional_rag) {
+        console.error('❌ Missing traditional_rag data in comparison results');
+      }
+      console.log('🔗 GraphRAG summary:', graphragRes.data.answer ? 'Generated' : 'Failed');
+      console.log('📄 Traditional RAG summary:', traditionalRes.data.answer ? 'Generated' : 'Failed');
       
       setComparisonResults(comparison);
       
       // Run LLM judge evaluation if both summaries exist
-      if (comparison.hybrid.answer && comparison.documentsOnly.answer) {
+      if (comparison.graphrag.answer && comparison.traditional_rag.answer) {
         console.log('🤖 Running LLM Judge evaluation...');
         
         try {
-          // Prepare comprehensive data for LLM Judge
+          // Prepare BLIND evaluation data for LLM Judge (no identifying information)
           const judgePayload = {
             query: searchQuery.trim(),
             
-            // Hybrid Search Data
-            hybrid: {
-              summary: comparison.hybrid.answer || 'No summary generated',
-              sources: {
-                documents: comparison.hybrid.documents || [],
-                citations: comparison.hybrid.citations || [],
-                knowledge_graph_entities: comparison.hybrid.results || []
-              },
-              source_counts: {
-                documents: comparison.hybrid.documents?.length || 0,
-                citations: comparison.hybrid.citations?.length || 0,
-                knowledge_graph: comparison.hybrid.results?.length || 0
-              }
-            },
+            // Anonymized summaries - judge doesn't know which method generated which
+            summary_a: comparison.graphrag.answer || 'No summary generated',
+            summary_b: comparison.traditional_rag.answer || 'No summary generated',
             
-            // Documents-Only Search Data
-            documents_only: {
-              summary: comparison.documentsOnly.answer || 'No summary generated',
-              sources: {
-                documents: comparison.documentsOnly.documents || [],
-                citations: comparison.documentsOnly.citations || [],
-                knowledge_graph_entities: []
-              },
-              source_counts: {
-                documents: comparison.documentsOnly.documents?.length || 0,
-                citations: comparison.documentsOnly.citations?.length || 0,
-                knowledge_graph: 0
-              }
-            },
-            
-            // Evaluation criteria
+            // Evaluation criteria only (no source metadata that reveals method)
             evaluation_criteria: [
               'completeness',
               'accuracy', 
               'contextual_depth',
-              'source_diversity',
               'relevance_to_query',
-              'actionable_insights'
+              'actionable_insights',
+              'answer_quality'
             ]
           };
           
-          console.log('📤 Sending to LLM Judge - Full Payload:');
+          console.log('📤 Sending to LLM Judge - BLIND Evaluation:');
           console.log('🔍 Query:', judgePayload.query);
-          console.log('🔗 Hybrid Data:');
-          console.log('  📝 Summary:', judgePayload.hybrid.summary);
-          console.log('  📊 Sources:', judgePayload.hybrid.source_counts);
-          console.log('  📚 Citations:', judgePayload.hybrid.sources.citations);
-          console.log('  🕸️ Knowledge Graph Entities:', judgePayload.hybrid.sources.knowledge_graph_entities);
-          console.log('📄 Documents-Only Data:');
-          console.log('  📝 Summary:', judgePayload.documents_only.summary);
-          console.log('  📊 Sources:', judgePayload.documents_only.source_counts);
-          console.log('  📚 Citations:', judgePayload.documents_only.sources.citations);
-          console.log('📋 Full Payload Object:', JSON.stringify(judgePayload, null, 2));
+          console.log('📝 Summary A Length:', judgePayload.summary_a.length, 'characters');
+          console.log('📝 Summary B Length:', judgePayload.summary_b.length, 'characters');
+          console.log('📋 Evaluation Criteria:', judgePayload.evaluation_criteria);
+          console.log('🔒 Judge receives NO identifying information about which method generated which summary');
           
           const judgeRes = await axios.post(`${API_BASE_URL}/evaluate-summaries`, judgePayload, { timeout: 20000 });
           
           console.log('⚖️ LLM Judge Response:', judgeRes.data);
           
-          // Transform LLM response from neutral format back to UI format
+          // Transform LLM response from blind evaluation back to UI format
           const transformedResults = {
             ...judgeRes.data,
-            // Map summary_a/summary_b back to hybrid/documents_only for UI
-            winner: judgeRes.data.winner === 'summary_a' ? 'hybrid' : 'documents_only',
+            // Map anonymous results back to method names for UI display
+            // Note: summary_a = GraphRAG, summary_b = Traditional RAG (judge doesn't know this)
+            winner: judgeRes.data.winner === 'summary_a' ? 'graphrag' : 'traditional_rag',
             criteria_scores: {}
           };
           
-          // Transform criteria scores
+          // Transform criteria scores from anonymous to method names
           if (judgeRes.data.criteria_scores) {
             Object.entries(judgeRes.data.criteria_scores).forEach(([criteria, scores]) => {
               transformedResults.criteria_scores[criteria] = {
-                hybrid: scores.summary_a,
-                documents: scores.summary_b
+                graphrag: scores.summary_a,
+                traditional_rag: scores.summary_b
               };
             });
           }
           
-          // Detailed logging of LLM Judge reasoning
-          console.log('\n🤖 === LLM JUDGE DETAILED ANALYSIS ===');
-          console.log('🏆 Winner (neutral evaluation):', judgeRes.data.winner);
-          console.log('🏆 Winner (mapped):', transformedResults.winner);
+          // Detailed logging of BLIND LLM Judge evaluation
+          console.log('\n🤖 === BLIND LLM JUDGE ANALYSIS ===');
+          console.log('🏆 Winner (anonymous evaluation):', judgeRes.data.winner);
+          console.log('🏆 Winner (revealed identity):', transformedResults.winner);
           console.log('📊 Confidence:', judgeRes.data.confidence + '%');
           console.log('💭 Reasoning:', judgeRes.data.reasoning);
+          console.log('🔒 Judge evaluated summaries without knowing which method generated them');
           
           if (transformedResults.criteria_scores) {
-            console.log('\n📋 Detailed Criteria Scores:');
+            console.log('\n📋 Detailed Criteria Scores (Post-Evaluation Mapping):');
             Object.entries(transformedResults.criteria_scores).forEach(([criteria, scores]) => {
               console.log(`  ${criteria.replace(/_/g, ' ').toUpperCase()}:`);
-              console.log(`    🔗 Hybrid (was Summary A): ${scores.hybrid}/10`);
-              console.log(`    📄 Documents (was Summary B): ${scores.documents}/10`);
-              console.log(`    📈 Difference: ${scores.hybrid - scores.documents > 0 ? '+' : ''}${scores.hybrid - scores.documents}`);
+              console.log(`    🔗 GraphRAG (was Anonymous Summary A): ${scores.graphrag}/10`);
+              console.log(`    📄 Traditional RAG (was Anonymous Summary B): ${scores.traditional_rag}/10`);
+              console.log(`    📈 Difference: ${scores.graphrag - scores.traditional_rag > 0 ? '+' : ''}${scores.graphrag - scores.traditional_rag}`);
             });
           }
           
           // Summary analysis
-          const totalHybridScore = Object.values(transformedResults.criteria_scores || {}).reduce((sum, scores) => sum + scores.hybrid, 0);
-          const totalDocsScore = Object.values(transformedResults.criteria_scores || {}).reduce((sum, scores) => sum + scores.documents, 0);
+          const totalGraphRAGScore = Object.values(transformedResults.criteria_scores || {}).reduce((sum, scores) => sum + scores.graphrag, 0);
+          const totalTraditionalScore = Object.values(transformedResults.criteria_scores || {}).reduce((sum, scores) => sum + scores.traditional_rag, 0);
           const criteriaCount = Object.keys(transformedResults.criteria_scores || {}).length;
           
           if (criteriaCount > 0) {
-            console.log(`📊 Overall Averages: Hybrid ${(totalHybridScore/criteriaCount).toFixed(1)}/10, Documents ${(totalDocsScore/criteriaCount).toFixed(1)}/10`);
-            console.log(`🏆 LLM Judge Decision: ${transformedResults.winner.toUpperCase()} wins with ${transformedResults.confidence}% confidence`);
+            console.log(`📊 Overall Averages: GraphRAG ${(totalGraphRAGScore/criteriaCount).toFixed(1)}/10, Traditional RAG ${(totalTraditionalScore/criteriaCount).toFixed(1)}/10`);
+            console.log(`🏆 BLIND Judge Decision: ${transformedResults.winner.toUpperCase()} wins with ${transformedResults.confidence}% confidence`);
           }
-          console.log('🤖 === END LLM JUDGE ANALYSIS ===\n');
+          console.log('🤖 === END BLIND JUDGE ANALYSIS ===\n');
           
           setAnalysisResults(transformedResults);
         } catch (judgeError) {
@@ -251,89 +214,89 @@ function App() {
           console.log('📊 Fallback Analysis - Using Local Evaluation...');
           
           // Detailed analysis of the actual differences
-          const hybridData = {
-            summaryLength: comparison.hybrid.answer?.length || 0,
-            documentsCount: comparison.hybrid.documents?.length || 0,
-            citationsCount: comparison.hybrid.citations?.length || 0,
-            entitiesCount: comparison.hybrid.results?.length || 0
+          const graphragData = {
+            summaryLength: comparison.graphrag.answer?.length || 0,
+            documentsCount: comparison.graphrag.documents?.length || 0,
+            citationsCount: comparison.graphrag.citations?.length || 0,
+            entitiesCount: comparison.graphrag.graph_entities?.length || 0
           };
           
-          const docsData = {
-            summaryLength: comparison.documentsOnly.answer?.length || 0,
-            documentsCount: comparison.documentsOnly.documents?.length || 0,
-            citationsCount: comparison.documentsOnly.citations?.length || 0,
+          const traditionalData = {
+            summaryLength: comparison.traditional_rag.answer?.length || 0,
+            documentsCount: comparison.traditional_rag.documents?.length || 0,
+            citationsCount: comparison.traditional_rag.citations?.length || 0,
             entitiesCount: 0
           };
           
-          console.log('🔗 Hybrid Analysis:', hybridData);
-          console.log('📄 Documents Analysis:', docsData);
+          console.log('🔗 GraphRAG Analysis:', graphragData);
+          console.log('📄 Traditional RAG Analysis:', traditionalData);
           
           // Dynamic advantage detection
-          const hybridAdvantages = [];
-          const docLimitations = [];
+          const graphragAdvantages = [];
+          const traditionalLimitations = [];
           
-          if (hybridData.citationsCount > docsData.citationsCount) {
-            hybridAdvantages.push(`${hybridData.citationsCount} structured citations vs ${docsData.citationsCount}`);
+          if (graphragData.citationsCount > traditionalData.citationsCount) {
+            graphragAdvantages.push(`${graphragData.citationsCount} structured citations vs ${traditionalData.citationsCount}`);
           }
-          if (hybridData.entitiesCount > 0) {
-            hybridAdvantages.push(`${hybridData.entitiesCount} knowledge graph entities providing context`);
+          if (graphragData.entitiesCount > 0) {
+            graphragAdvantages.push(`${graphragData.entitiesCount} knowledge graph entities providing context`);
           }
-          if (hybridData.documentsCount > docsData.documentsCount) {
-            hybridAdvantages.push(`broader document coverage (${hybridData.documentsCount} vs ${docsData.documentsCount})`);
+          if (graphragData.documentsCount > traditionalData.documentsCount) {
+            graphragAdvantages.push(`broader document coverage (${graphragData.documentsCount} vs ${traditionalData.documentsCount})`);
           }
-          if (hybridData.summaryLength > docsData.summaryLength * 1.2) {
-            hybridAdvantages.push('more comprehensive summary content');
+          if (graphragData.summaryLength > traditionalData.summaryLength * 1.2) {
+            graphragAdvantages.push('more comprehensive summary content');
           }
           
-          if (docsData.citationsCount === 0) {
-            docLimitations.push('no structured citations');
+          if (traditionalData.citationsCount === 0) {
+            traditionalLimitations.push('no structured citations');
           }
-          if (docsData.entitiesCount === 0) {
-            docLimitations.push('missing relationship context');
+          if (traditionalData.entitiesCount === 0) {
+            traditionalLimitations.push('missing relationship context');
           }
           
           // Calculate detailed scores
           const scores = {
             completeness: {
-              hybrid: Math.min(10, 6 + (hybridData.citationsCount > 0 ? 2 : 0) + (hybridData.entitiesCount > 0 ? 2 : 0)),
-              documents: Math.min(8, 4 + (docsData.documentsCount > 0 ? 2 : 0) + (docsData.summaryLength > 100 ? 1 : 0))
+              graphrag: Math.min(10, 6 + (graphragData.citationsCount > 0 ? 2 : 0) + (graphragData.entitiesCount > 0 ? 2 : 0)),
+              traditional_rag: Math.min(8, 4 + (traditionalData.documentsCount > 0 ? 2 : 0) + (traditionalData.summaryLength > 100 ? 1 : 0))
             },
             accuracy: { 
-              hybrid: 8, 
-              documents: 7 
+              graphrag: 8, 
+              traditional_rag: 7 
             },
             contextual_depth: { 
-              hybrid: Math.min(10, 5 + (hybridData.entitiesCount > 0 ? 3 : 0) + (hybridData.citationsCount > 0 ? 2 : 0)), 
-              documents: Math.min(6, 3 + (docsData.documentsCount > 0 ? 2 : 0))
+              graphrag: Math.min(10, 5 + (graphragData.entitiesCount > 0 ? 3 : 0) + (graphragData.citationsCount > 0 ? 2 : 0)), 
+              traditional_rag: Math.min(6, 3 + (traditionalData.documentsCount > 0 ? 2 : 0))
             },
             source_diversity: {
-              hybrid: Math.min(10, (hybridData.documentsCount > 0 ? 3 : 0) + (hybridData.citationsCount > 0 ? 3 : 0) + (hybridData.entitiesCount > 0 ? 4 : 0)),
-              documents: Math.min(6, (docsData.documentsCount > 0 ? 4 : 0) + (docsData.documentsCount > 1 ? 2 : 0))
+              graphrag: Math.min(10, (graphragData.documentsCount > 0 ? 3 : 0) + (graphragData.citationsCount > 0 ? 3 : 0) + (graphragData.entitiesCount > 0 ? 4 : 0)),
+              traditional_rag: Math.min(6, (traditionalData.documentsCount > 0 ? 4 : 0) + (traditionalData.documentsCount > 1 ? 2 : 0))
             },
             relevance_to_query: { 
-              hybrid: 8, 
-              documents: Math.min(8, docsData.documentsCount > 0 ? 7 : 4)
+              graphrag: 8, 
+              traditional_rag: Math.min(8, traditionalData.documentsCount > 0 ? 7 : 4)
             },
             actionable_insights: {
-              hybrid: Math.min(9, 6 + (hybridData.entitiesCount > 0 ? 2 : 0) + (hybridData.citationsCount > 0 ? 1 : 0)),
-              documents: Math.min(6, 4 + (docsData.summaryLength > 200 ? 2 : 0))
+              graphrag: Math.min(9, 6 + (graphragData.entitiesCount > 0 ? 2 : 0) + (graphragData.citationsCount > 0 ? 1 : 0)),
+              traditional_rag: Math.min(6, 4 + (traditionalData.summaryLength > 200 ? 2 : 0))
             }
           };
           
           console.log('📊 Calculated Scores:', scores);
           
-          const analysisReasoning = `Comprehensive analysis reveals hybrid search advantages: ${hybridAdvantages.join(', ')}. Documents-only limitations include: ${docLimitations.join(', ')}. The hybrid approach provides ${hybridData.citationsCount} citations, ${hybridData.entitiesCount} knowledge graph entities, and ${hybridData.documentsCount} documents vs documents-only with ${docsData.documentsCount} documents and ${docsData.citationsCount} citations.`;
+          const analysisReasoning = `Comprehensive analysis reveals GraphRAG advantages: ${graphragAdvantages.join(', ')}. Traditional RAG limitations include: ${traditionalLimitations.join(', ')}. GraphRAG provides ${graphragData.citationsCount} citations, ${graphragData.entitiesCount} knowledge graph entities, and ${graphragData.documentsCount} documents vs Traditional RAG with ${traditionalData.documentsCount} documents and ${traditionalData.citationsCount} citations.`;
           
           // Calculate confidence based on actual differences
-          const avgHybridScore = Object.values(scores).reduce((sum, score) => sum + score.hybrid, 0) / Object.keys(scores).length;
-          const avgDocsScore = Object.values(scores).reduce((sum, score) => sum + score.documents, 0) / Object.keys(scores).length;
-          const scoreDifference = avgHybridScore - avgDocsScore;
+          const avgGraphRAGScore = Object.values(scores).reduce((sum, score) => sum + score.graphrag, 0) / Object.keys(scores).length;
+          const avgTraditionalScore = Object.values(scores).reduce((sum, score) => sum + score.traditional_rag, 0) / Object.keys(scores).length;
+          const scoreDifference = avgGraphRAGScore - avgTraditionalScore;
           const confidence = Math.min(95, Math.max(60, 70 + (scoreDifference * 8)));
           
-          console.log(`📈 Average Scores - Hybrid: ${avgHybridScore.toFixed(1)}, Documents: ${avgDocsScore.toFixed(1)}, Confidence: ${confidence.toFixed(0)}%`);
+          console.log(`📈 Average Scores - GraphRAG: ${avgGraphRAGScore.toFixed(1)}, Traditional RAG: ${avgTraditionalScore.toFixed(1)}, Confidence: ${confidence.toFixed(0)}%`);
           
           const fallbackResults = {
-            winner: avgHybridScore > avgDocsScore ? 'hybrid' : 'documents_only',
+            winner: avgGraphRAGScore > avgTraditionalScore ? 'graphrag' : 'traditional_rag',
             confidence: Math.round(confidence),
             reasoning: analysisReasoning,
             criteria_scores: scores
@@ -348,13 +311,13 @@ function App() {
           console.log('\n📋 Fallback Criteria Scores:');
           Object.entries(scores).forEach(([criteria, scores]) => {
             console.log(`  ${criteria.replace(/_/g, ' ').toUpperCase()}:`);
-            console.log(`    🔗 Hybrid: ${scores.hybrid}/10`);
-            console.log(`    📄 Documents: ${scores.documents}/10`);
-            console.log(`    📈 Difference: ${scores.hybrid - scores.documents > 0 ? '+' : ''}${scores.hybrid - scores.documents}`);
+            console.log(`    🔗 GraphRAG: ${scores.graphrag}/10`);
+            console.log(`    📄 Traditional RAG: ${scores.traditional_rag}/10`);
+            console.log(`    📈 Difference: ${scores.graphrag - scores.traditional_rag > 0 ? '+' : ''}${scores.graphrag - scores.traditional_rag}`);
           });
           
           // Summary analysis for fallback
-          console.log(`📊 Overall Averages: Hybrid ${avgHybridScore.toFixed(1)}/10, Documents ${avgDocsScore.toFixed(1)}/10`);
+          console.log(`📊 Overall Averages: GraphRAG ${avgGraphRAGScore.toFixed(1)}/10, Traditional RAG ${avgTraditionalScore.toFixed(1)}/10`);
           console.log(`🏆 Fallback Decision: ${fallbackResults.winner.toUpperCase()} wins with ${fallbackResults.confidence}% confidence`);
           console.log('🛠️ === END FALLBACK ANALYSIS ===\n');
           
@@ -362,8 +325,8 @@ function App() {
         }
       } else {
         console.log('❌ Cannot run LLM judge - missing summaries:', {
-          hybrid: !!comparison.hybrid.answer,
-          documents: !!comparison.documentsOnly.answer
+          graphrag: !!comparison.graphrag.answer,
+          traditional_rag: !!comparison.traditional_rag.answer
         });
       }
       
@@ -409,11 +372,12 @@ function App() {
       }
       
       let endpoint = '/search'; // default to knowledge graph search
-      if (searchMode === 'hybrid') {
-        endpoint = '/hybrid-search';
-      } else if (searchMode === 'documents') {
-        // Use hybrid-search for documents-only to get AI answers, but we'll filter the display
-        endpoint = '/hybrid-search';
+      if (searchMode === 'graphrag') {
+        endpoint = '/graphrag-search';
+      } else if (searchMode === 'traditional-rag') {
+        endpoint = '/traditional-rag-search';
+      } else if (searchMode === 'knowledge-graph-only') {
+        endpoint = '/knowledge-graph-only-search';
       }
       
       const requestBody = {
@@ -433,7 +397,7 @@ function App() {
         setError('No relevant information found for your query. Try rephrasing or using different keywords.');
       }
     } catch (err) {
-      let errorMessage = `Failed to search ${searchMode === 'hybrid' ? 'documents and knowledge graph' : searchMode === 'documents' ? 'documents' : 'knowledge graph'}`;
+      let errorMessage = `Failed to search ${searchMode === 'graphrag' ? 'GraphRAG (documents + knowledge graph)' : searchMode === 'traditional-rag' ? 'Traditional RAG (documents only)' : 'knowledge graph only'}`;
       
       if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
         errorMessage = 'Cannot connect to backend server. Please ensure the backend is running on port 8000.';
@@ -567,36 +531,36 @@ function App() {
             <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
               <input
                 type="radio"
-                value="hybrid"
-                checked={searchMode === 'hybrid'}
+                value="graphrag"
+                checked={searchMode === 'graphrag'}
                 onChange={(e) => setSearchMode(e.target.value)}
                 style={{ marginRight: 5 }}
               />
-              <span style={{ color: searchMode === 'hybrid' ? '#007bff' : '#666' }}>
-                🔗 Hybrid Search (Documents + Knowledge Graph)
+              <span style={{ color: searchMode === 'graphrag' ? '#007bff' : '#666' }}>
+                🔗 GraphRAG (Documents + Knowledge Graph)
               </span>
             </label>
             <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
               <input
                 type="radio"
-                value="documents"
-                checked={searchMode === 'documents'}
+                value="traditional-rag"
+                checked={searchMode === 'traditional-rag'}
                 onChange={(e) => setSearchMode(e.target.value)}
                 style={{ marginRight: 5 }}
               />
-              <span style={{ color: searchMode === 'documents' ? '#007bff' : '#666' }}>
-                📄 Documents Only
+              <span style={{ color: searchMode === 'traditional-rag' ? '#007bff' : '#666' }}>
+                📄 Traditional RAG (Documents Only)
               </span>
             </label>
             <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
               <input
                 type="radio"
-                value="knowledge-graph"
-                checked={searchMode === 'knowledge-graph'}
+                value="knowledge-graph-only"
+                checked={searchMode === 'knowledge-graph-only'}
                 onChange={(e) => setSearchMode(e.target.value)}
                 style={{ marginRight: 5 }}
               />
-              <span style={{ color: searchMode === 'knowledge-graph' ? '#007bff' : '#666' }}>
+              <span style={{ color: searchMode === 'knowledge-graph-only' ? '#007bff' : '#666' }}>
                 🕸️ Knowledge Graph Only
               </span>
             </label>
@@ -621,9 +585,9 @@ function App() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
-              searchMode === 'hybrid' ? "Ask about investments, company strategies, or business trends..." :
-              searchMode === 'documents' ? "Search investment reports and business documents..." :
-              searchMode === 'comparison' ? "Compare hybrid vs documents-only search results..." :
+              searchMode === 'graphrag' ? "Ask about investments, company strategies, or business trends..." :
+              searchMode === 'traditional-rag' ? "Search investment reports and business documents..." :
+              searchMode === 'comparison' ? "Compare GraphRAG vs Traditional RAG search results..." :
               "Ask about companies, people, and their relationships..."
             }
             style={{ 
@@ -660,13 +624,13 @@ function App() {
           background: 'var(--glass-bg-secondary)'
         }}>
           💡 <strong>Try these examples:</strong>
-          {searchMode === 'hybrid' && (
+          {searchMode === 'graphrag' && (
             <span> "Apple's investments for 2025", "Tesla's energy storage plans", "Meta's metaverse strategy"</span>
           )}
-          {searchMode === 'documents' && (
+          {searchMode === 'traditional-rag' && (
             <span> "Cloud infrastructure investment", "AI research funding", "Renewable energy projects"</span>
           )}
-          {searchMode === 'knowledge-graph' && (
+          {searchMode === 'knowledge-graph-only' && (
             <span> "Who works at Google?", "What companies are in tech?", "Show me AI researchers"</span>
           )}
           {searchMode === 'comparison' && (
@@ -713,8 +677,8 @@ function App() {
               marginBottom: 15
             }}>
               <h3 style={{ color: 'var(--glass-text)', margin: 0, textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
-                {searchResults.searchMode === 'hybrid' && '🔗 Hybrid Search Results'}
-                {searchResults.searchMode === 'documents' && '📄 Document Search Results'}
+                {searchResults.searchMode === 'graphrag' && '🔗 GraphRAG Search Results'}
+                {searchResults.searchMode === 'traditional-rag' && '📄 Traditional RAG Search Results'}
                 {searchResults.searchMode === 'knowledge-graph' && '🕸️ Knowledge Graph Results'}
               </h3>
               <div className="glass-container" style={{ 
@@ -729,7 +693,7 @@ function App() {
               </div>
             </div>
 
-            {/* Generated Answer (for hybrid and knowledge graph search) */}
+            {/* Generated Answer (for GraphRAG and knowledge graph search) */}
             {searchResults.answer && (
               <>
                 <h4 style={{ color: 'var(--glass-text)', borderBottom: '2px solid var(--glass-accent)', paddingBottom: 8, textShadow: '0 1px 5px rgba(0, 0, 0, 0.1)' }}>
@@ -1202,25 +1166,25 @@ function App() {
         )}
 
         {/* Comparison Results */}
-        {comparisonResults && (
+        {comparisonResults && comparisonResults.graphrag && comparisonResults.traditional_rag && (
           <div className="results-container slide-in" style={{ marginTop: 20, padding: 20 }}>
             <h3 style={{ color: 'var(--retro-cyan)', margin: 0, textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', marginBottom: 20 }}>
-              ⚖️ Hybrid vs Documents-Only Comparison
+              ⚖️ GraphRAG vs Traditional RAG Comparison
             </h3>
             
             <div className="comparison-grid">
               {/* Left Column - Hybrid Search Results */}
               <div>
                 <h4 style={{ color: 'var(--retro-green)', marginBottom: 15, fontSize: '18px' }}>
-                  🔗 Hybrid Search (Knowledge Graph + Documents)
+                  🔗 GraphRAG Search (Knowledge Graph + Documents)
                 </h4>
                 <div className="glass-container" style={{ 
                   padding: 20,
-                  border: analysisResults?.winner === 'hybrid' ? '3px solid var(--retro-green)' : '2px solid var(--retro-green)',
-                  boxShadow: analysisResults?.winner === 'hybrid' ? '0 0 30px var(--retro-green)' : '0 0 20px var(--retro-green)',
+                  border: analysisResults?.winner === 'graphrag' ? '3px solid var(--retro-green)' : '2px solid var(--retro-green)',
+                  boxShadow: analysisResults?.winner === 'graphrag' ? '0 0 30px var(--retro-green)' : '0 0 20px var(--retro-green)',
                   position: 'relative'
                 }}>
-                  {analysisResults?.winner === 'hybrid' && (
+                  {analysisResults?.winner === 'graphrag' && (
                     <div style={{
                       position: 'absolute',
                       top: '-15px',
@@ -1236,7 +1200,7 @@ function App() {
                       🏆 LLM JUDGE WINNER
                     </div>
                   )}
-                  {comparisonResults.hybrid.answer ? (
+                  {comparisonResults.graphrag?.answer ? (
                     <>
                       <div style={{ 
                         marginBottom: 15,
@@ -1245,19 +1209,19 @@ function App() {
                         borderRadius: 8,
                         fontSize: 14,
                         lineHeight: 1.6,
-                        border: analysisResults?.winner === 'hybrid' ? '2px solid var(--retro-green)' : '1px solid var(--glass-border)'
+                        border: analysisResults?.winner === 'graphrag' ? '2px solid var(--retro-green)' : '1px solid var(--glass-border)'
                       }}>
-                        {comparisonResults.hybrid.answer}
+                        {comparisonResults.graphrag.answer}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--glass-text-secondary)', marginBottom: 10 }}>
-                        📊 Sources: {comparisonResults.hybrid.documents?.length || 0} documents, 
-                        {comparisonResults.hybrid.results?.length || 0} knowledge graph entities,
-                        {comparisonResults.hybrid.citations?.length || 0} citations
+                        📊 Sources: {comparisonResults.graphrag.documents?.length || 0} documents, 
+                        {comparisonResults.graphrag.results?.length || 0} knowledge graph entities,
+                        {comparisonResults.graphrag.citations?.length || 0} citations
                       </div>
                     </>
                   ) : (
                     <div style={{ textAlign: 'center', color: 'var(--glass-text-secondary)', padding: 20 }}>
-                      No hybrid answer generated
+                      No GraphRAG answer generated
                     </div>
                   )}
                 </div>
@@ -1266,15 +1230,15 @@ function App() {
               {/* Right Column - Documents-Only Results */}
               <div>
                 <h4 style={{ color: 'var(--retro-pink)', marginBottom: 15, fontSize: '18px' }}>
-                  📄 Documents-Only Search
+                  📄 Traditional RAG Search
                 </h4>
                 <div className="glass-container" style={{ 
                   padding: 20,
-                  border: analysisResults?.winner === 'documents_only' ? '3px solid var(--retro-pink)' : '2px solid var(--retro-pink)',
-                  boxShadow: analysisResults?.winner === 'documents_only' ? '0 0 30px var(--retro-pink)' : '0 0 20px var(--retro-pink)',
+                  border: analysisResults?.winner === 'traditional_rag' ? '3px solid var(--retro-pink)' : '2px solid var(--retro-pink)',
+                  boxShadow: analysisResults?.winner === 'traditional_rag' ? '0 0 30px var(--retro-pink)' : '0 0 20px var(--retro-pink)',
                   position: 'relative'
                 }}>
-                  {analysisResults?.winner === 'documents_only' && (
+                  {analysisResults?.winner === 'traditional_rag' && (
                     <div style={{
                       position: 'absolute',
                       top: '-15px',
@@ -1290,7 +1254,7 @@ function App() {
                       🏆 LLM JUDGE WINNER
                     </div>
                   )}
-                  {comparisonResults.documentsOnly.answer ? (
+                  {comparisonResults.traditional_rag?.answer ? (
                     <>
                       <div style={{ 
                         marginBottom: 15,
@@ -1299,16 +1263,16 @@ function App() {
                         borderRadius: 8,
                         fontSize: 14,
                         lineHeight: 1.6,
-                        border: analysisResults?.winner === 'documents_only' ? '2px solid var(--accent-blue)' : '1px solid var(--border-color)',
+                        border: analysisResults?.winner === 'traditional_rag' ? '2px solid var(--retro-pink)' : '1px solid var(--glass-border)',
                         maxHeight: '400px',
                         overflowY: 'auto',
                         whiteSpace: 'pre-wrap',
                         wordWrap: 'break-word'
                       }}>
-                        {comparisonResults.documentsOnly.answer}
+                        {comparisonResults.traditional_rag.answer}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 10 }}>
-                        📊 Sources: {comparisonResults.documentsOnly.documents?.length || 0} documents only
+                        📊 Sources: {comparisonResults.traditional_rag.documents?.length || 0} documents only
                         <br />
                         ⚠️ Limited to document content, no relationship context
                       </div>
@@ -1339,18 +1303,18 @@ function App() {
                   textAlign: 'center',
                   marginBottom: 20,
                   padding: 16,
-                  background: analysisResults.winner === 'hybrid' ? 'var(--glass-bg-secondary)' : 'var(--glass-bg-tertiary)',
+                  background: analysisResults.winner === 'graphrag' ? 'var(--glass-bg-secondary)' : 'var(--glass-bg-tertiary)',
                   borderRadius: 12,
-                  border: `2px solid ${analysisResults.winner === 'hybrid' ? 'var(--retro-green)' : 'var(--retro-pink)'}`,
-                  boxShadow: `0 0 15px ${analysisResults.winner === 'hybrid' ? 'var(--retro-green)' : 'var(--retro-pink)'}`
+                  border: `2px solid ${analysisResults.winner === 'graphrag' ? 'var(--retro-green)' : 'var(--retro-pink)'}`,
+                  boxShadow: `0 0 15px ${analysisResults.winner === 'graphrag' ? 'var(--retro-green)' : 'var(--retro-pink)'}`
                 }}>
                   <div style={{ fontSize: 20, marginBottom: 8 }}>
                     🏆 Winner: <strong style={{ 
-                      color: analysisResults.winner === 'hybrid' ? 'var(--retro-green)' : 'var(--retro-pink)',
+                      color: analysisResults.winner === 'graphrag' ? 'var(--retro-green)' : 'var(--retro-pink)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.1em'
                     }}>
-                      {analysisResults.winner === 'hybrid' ? 'Hybrid Search' : 'Documents-Only'}
+                      {analysisResults.winner === 'graphrag' ? 'GraphRAG Search' : 'Traditional RAG'}
                     </strong>
                   </div>
                   <div style={{ 
@@ -1381,7 +1345,7 @@ function App() {
                 </div>
 
                 {/* Criteria Scores */}
-                {analysisResults.criteria_scores && (
+                {analysisResults.criteria_scores && Object.keys(analysisResults.criteria_scores).length > 0 && (
                   <div>
                     <h5 style={{ color: 'var(--retro-cyan)', marginBottom: 12, fontSize: '14px' }}>
                       📊 Detailed Scoring (1-10 scale):
@@ -1414,10 +1378,10 @@ function App() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                               <span style={{ fontSize: 11, color: 'var(--retro-green)' }}>
-                                Hybrid: {scores.hybrid}/10
+                                GraphRAG: {scores.graphrag}/10
                               </span>
                               <div style={{
-                                width: `${scores.hybrid * 8}px`,
+                                width: `${scores.graphrag * 8}px`,
                                 height: '4px',
                                 background: 'var(--retro-green)',
                                 borderRadius: '2px'
@@ -1425,10 +1389,10 @@ function App() {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                               <span style={{ fontSize: 11, color: 'var(--retro-pink)' }}>
-                                Documents: {scores.documents}/10
+                                Traditional RAG: {scores.traditional_rag}/10
                               </span>
                               <div style={{
-                                width: `${scores.documents * 8}px`,
+                                width: `${scores.traditional_rag * 8}px`,
                                 height: '4px',
                                 background: 'var(--retro-pink)',
                                 borderRadius: '2px'
@@ -1511,8 +1475,8 @@ function App() {
                     </div>
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--glass-text-secondary)' }}>
-                    <strong>Current Status:</strong> {comparisonResults.hybrid.results?.length || 0} knowledge graph entities, 
-                    {comparisonResults.hybrid.documents?.length || 0} documents integrated
+                    <strong>Current Status:</strong> {comparisonResults.graphrag.results?.length || 0} knowledge graph entities, 
+                    {comparisonResults.graphrag.documents?.length || 0} documents integrated
                   </div>
                 </div>
               </div>
