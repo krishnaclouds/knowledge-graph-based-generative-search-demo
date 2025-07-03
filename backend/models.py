@@ -40,19 +40,6 @@ class SearchResponse(BaseModel):
     answer: str
     citations: List[Citation] = []
 
-class GraphNode(BaseModel):
-    id: int
-    label: str
-    group: str
-
-class GraphEdge(BaseModel):
-    from_node: int = Field(..., alias="from")
-    to_node: int = Field(..., alias="to")
-    label: str
-
-class GraphData(BaseModel):
-    nodes: List[GraphNode]
-    edges: List[GraphEdge]
 
 class HealthStatus(BaseModel):
     status: str
@@ -71,8 +58,10 @@ class SearchSummary(BaseModel):
 
 class EvaluationRequest(BaseModel):
     query: str
-    hybrid: SearchSummary
-    documents_only: SearchSummary
+    # Blind evaluation - no method identification
+    summary_a: str
+    summary_b: str
+    evaluation_criteria: List[str] = []
 
 class CriteriaScores(BaseModel):
     summary_a: int = Field(..., ge=1, le=10)

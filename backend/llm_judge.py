@@ -1,7 +1,7 @@
 """
 LLM Judge implementation for comparing search result summaries
 """
-from services import LLMService
+from core_services import llm_service
 from models import EvaluationRequest, EvaluationResponse, CriteriaScores
 import logging
 
@@ -9,22 +9,22 @@ logger = logging.getLogger(__name__)
 
 class LLMJudge:
     def __init__(self):
-        self.llm_service = LLMService()
+        self.llm_service = llm_service
     
     def evaluate_summaries(self, request: EvaluationRequest) -> EvaluationResponse:
         """
         Use Claude as an impartial judge to evaluate and compare summaries
         """
-        # Prepare evaluation prompt
-        evaluation_prompt = f"""You are an expert research analyst tasked with objectively evaluating two AI-generated summaries for the same query. Please provide a detailed comparison and determine which summary is superior.
+        # Prepare BLIND evaluation prompt (no method identification)
+        evaluation_prompt = f"""You are an expert research analyst tasked with objectively evaluating two AI-generated summaries for the same query. You do not know which method or system generated each summary. Please provide a detailed comparison and determine which summary is superior based purely on content quality.
 
 QUERY: "{request.query}"
 
 SUMMARY A:
-{request.hybrid.summary}
+{request.summary_a}
 
 SUMMARY B:
-{request.documents_only.summary}
+{request.summary_b}
 
 EVALUATION CRITERIA:
 Please score each summary on a scale of 1-10 for each criterion:
@@ -59,7 +59,7 @@ Be objective and focus solely on the quality and usefulness of each summary cont
             # Get evaluation from Claude
             evaluation_text = self.llm_service.generate_answer(
                 query="Evaluate summaries",
-                context_text=evaluation_prompt
+                context=evaluation_prompt
             )
             
             # Parse JSON response
@@ -88,33 +88,28 @@ Be objective and focus solely on the quality and usefulness of each summary cont
         hybrid_score = 0
         docs_score = 0
         
-        # Score based on source diversity
-        if request.hybrid.source_counts.knowledge_graph > 0:
-            hybrid_score += 3
-        if request.hybrid.source_counts.citations > request.documents_only.source_counts.citations:
-            hybrid_score += 2
-        if len(request.hybrid.summary) > len(request.documents_only.summary) * 1.2:
-            hybrid_score += 2
-            
-        # Score documents-only based on document quality
-        if request.documents_only.source_counts.documents > 0:
-            docs_score += 2
-        if len(request.documents_only.summary) > 100:
-            docs_score += 1
-            
-        winner = "summary_a" if hybrid_score > docs_score else "summary_b"
-        confidence = min(95, 60 + abs(hybrid_score - docs_score) * 10)
+        # Simple fallback scoring based on summary length and content
+        summary_a_score = len(request.summary_a) // 100 + 5  # Base score of 5 + length bonus
+        summary_b_score = len(request.summary_b) // 100 + 5  # Base score of 5 + length bonus
+        
+        # Determine winner based on length (simple heuristic)
+        if summary_a_score > summary_b_score:
+            winner = "summary_a"
+            confidence = min(95, 60 + abs(summary_a_score - summary_b_score) * 5)
+        else:
+            winner = "summary_b"
+            confidence = min(95, 60 + abs(summary_a_score - summary_b_score) * 5)
         
         return EvaluationResponse(
             winner=winner,
             confidence=confidence,
-            reasoning=f"Summary A appears more comprehensive with {len(request.hybrid.summary)} characters vs Summary B with {len(request.documents_only.summary)} characters. Summary A provides more detailed analysis and context.",
+            reasoning=f"Summary {'A' if winner == 'summary_a' else 'B'} appears more comprehensive with {len(request.summary_a if winner == 'summary_a' else request.summary_b)} characters vs the other summary with {len(request.summary_b if winner == 'summary_a' else request.summary_a)} characters.",
             criteria_scores={
-                "completeness": CriteriaScores(summary_a=8, summary_b=6),
-                "accuracy": CriteriaScores(summary_a=8, summary_b=7),
-                "contextual_depth": CriteriaScores(summary_a=9, summary_b=4),
+                "completeness": CriteriaScores(summary_a=min(10, summary_a_score), summary_b=min(10, summary_b_score)),
+                "accuracy": CriteriaScores(summary_a=7, summary_b=7),
+                "contextual_depth": CriteriaScores(summary_a=min(10, summary_a_score), summary_b=min(10, summary_b_score)),
                 "clarity": CriteriaScores(summary_a=8, summary_b=7),
                 "relevance_to_query": CriteriaScores(summary_a=8, summary_b=7),
-                "actionable_insights": CriteriaScores(summary_a=8, summary_b=6)
+                "actionable_insights": CriteriaScores(summary_a=7, summary_b=6)
             }
         )

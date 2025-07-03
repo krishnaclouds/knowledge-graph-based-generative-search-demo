@@ -1,15 +1,15 @@
-# Knowledge Graph RAG Search Demo
+# GraphRAG vs Traditional RAG Comparison Demo
 
-A full-stack application demonstrating Retrieval-Augmented Generation (RAG) search capabilities over a knowledge graph using Neo4j, embeddings, and Large Language Models.
+A focused comparison application that demonstrates the differences between GraphRAG (Graph-enhanced Retrieval-Augmented Generation) and Traditional RAG approaches using knowledge graphs, vector databases, and Large Language Models.
 
 ## 🌟 Features
 
+- **Side-by-Side Comparison**: Direct comparison of GraphRAG vs Traditional RAG results
+- **LLM Judge Evaluation**: Automated evaluation using Claude as an impartial judge
 - **Knowledge Graph Visualization**: Interactive graph visualization using vis-network
-- **Semantic Search**: Vector-based similarity search using sentence transformers
-- **RAG-based Q&A**: Generate contextual answers using Anthropic's Claude API
-- **Real-time Updates**: Live connection status and error handling
-- **Modular Architecture**: Clean separation of concerns in backend
-- **Comprehensive Error Handling**: User-friendly error messages and retry mechanisms
+- **Comprehensive Metrics**: Detailed scoring on completeness, accuracy, contextual depth, and more
+- **Real-time Analysis**: Live connection status and error handling
+- **Clean Architecture**: Streamlined codebase focused on comparison functionality
 
 ## 🏗️ Architecture
 
@@ -91,7 +91,35 @@ TEMPERATURE=0.3
 CORS_ORIGINS=["*"]
 ```
 
-### 4. Neo4j Setup
+### 4. Data Loading
+
+The application includes ChromaDB data and supports loading additional documents:
+
+```bash
+# Simple data loading (recommended)
+./load-data.sh
+```
+
+This script will:
+- Check for existing data
+- Offer loading options (quick/standard/large)
+- Set up both ChromaDB and knowledge graph data
+
+**Manual data loading options:**
+```bash
+cd backend
+
+# Quick load (10 documents)
+python run_collection.py
+
+# Standard load (100 documents) 
+python -c "from data_orchestrator import run_data_collection_pipeline; run_data_collection_pipeline(target_documents=100)"
+
+# Large load (1000+ documents)
+python collect_1k_documents.py
+```
+
+### 5. Neo4j Setup
 
 #### Option A: Neo4j Desktop
 1. Download and install Neo4j Desktop
@@ -104,18 +132,28 @@ CORS_ORIGINS=["*"]
 2. Create a free database
 3. Download the connection file or note the connection details
 
-### 5. Load Sample Data
+### 5. Load Data
 
+#### Option A: Quick Start with Sample Data
 ```bash
-cd backend
-python sample_data.py
+./start-backend.sh
+# Choose 'y' when prompted to load sample data
 ```
+
+#### Option B: Load 1000+ Documents for GraphRAG Evaluation
+```bash
+./load-data.sh
+```
+This will collect 1000+ documents from multiple sources:
+- ArXiv research papers (~300)
+- Semantic Scholar academic papers (~250) 
+- Tech news and company blogs (~250)
+- GitHub repositories (~200)
 
 ### 6. Start Backend
 
 ```bash
-cd backend
-python main.py
+./start-backend.sh
 ```
 
 The API will be available at `http://localhost:8000`
@@ -134,19 +172,42 @@ npm run dev
 
 The frontend will be available at `http://localhost:5173`
 
-## 📊 Sample Data
+## 📊 Data Options
 
-The application includes sample data with:
-
+### Sample Data (Quick Start)
+The application includes basic sample data with:
 - **Companies**: Technology companies with industry information
-- **People**: Employees with roles and company affiliations
+- **People**: Employees with roles and company affiliations  
 - **Topics**: Discussion topics with participant relationships
 
-Example queries to try:
+### Enhanced Dataset (1000+ Documents)
+For comprehensive GraphRAG vs RAG evaluation:
+- **Research Papers**: ArXiv and Semantic Scholar papers on AI/ML
+- **News Articles**: Tech news from TechCrunch, VentureBeat, Wired
+- **Company Blogs**: Research posts from Google, Microsoft, OpenAI, Meta
+- **GitHub Repositories**: AI/ML open source projects
+- **Knowledge Graph**: 500+ entities with rich interconnections
+
+### Search Modes Available
+
+1. **GraphRAG**: Uses knowledge graph relationships + documents
+2. **Traditional RAG**: Uses document vector similarity only
+3. **Knowledge Graph Only**: Pure graph structure reasoning  
+4. **Comparison Analysis**: Side-by-side GraphRAG vs Traditional RAG evaluation
+
+### Example Queries to Try
+
+**Sample Data Queries:**
 - "What companies are in the technology industry?"
 - "Who works at Google?"
 - "What topics are being discussed?"
-- "Tell me about artificial intelligence"
+
+**Enhanced Dataset Queries:**
+- "What are the latest advances in large language models?"
+- "How does federated learning work with computer vision?"
+- "What researchers are working on BERT and transformer models?"
+- "Tell me about quantum computing developments"
+- "What is the relationship between neural networks and reinforcement learning?"
 
 ## 🔧 API Endpoints
 

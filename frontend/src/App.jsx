@@ -1,19 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Network } from 'vis-network/standalone';
 import './App.css';
 
 const API_BASE_URL = 'http://localhost:8000';
 
 function App() {
-  const networkRef = useRef(null);
-  const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [searchMode, setSearchMode] = useState('graphrag'); // 'graphrag', 'traditional-rag', 'knowledge-graph-only', 'comparison'
+  const [searchMode, setSearchMode] = useState('comparison'); // only comparison mode
   const [connectionStatus, setConnectionStatus] = useState('unknown');
   const [retryCount, setRetryCount] = useState(0);
   const [comparisonResults, setComparisonResults] = useState(null);
@@ -33,41 +30,6 @@ function App() {
     }
   };
 
-  // Function to fetch graph data from backend
-  const fetchGraph = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const isConnected = await checkConnection();
-      if (!isConnected) {
-        throw new Error('Cannot connect to backend server. Please ensure the backend is running on port 8000.');
-      }
-      
-      const res = await axios.get(`${API_BASE_URL}/graph`, { timeout: 10000 });
-      setGraphData(res.data);
-      
-      if (res.data.nodes.length === 0) {
-        setError('No data found in the knowledge graph. Please ensure sample data is loaded.');
-      }
-    } catch (err) {
-      let errorMessage = 'Failed to fetch graph data';
-      
-      if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
-        errorMessage = 'Cannot connect to backend server. Please ensure the backend is running on port 8000.';
-      } else if (err.response?.status === 500) {
-        errorMessage = `Server error: ${err.response.data?.detail || 'Internal server error'}`;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Function to run comparison analysis
   const runComparisonAnalysis = async () => {
@@ -87,25 +49,21 @@ function App() {
         max_results: 8
       };
       
-      // Run both GraphRAG and Traditional RAG searches in parallel
-      console.log('🔍 Running comparison searches for:', searchQuery.trim());
+      // Run comparison search using the unified endpoint
+      console.log('🔍 Running comparison search for:', searchQuery.trim());
       
-      const [graphragRes, traditionalRes] = await Promise.all([
-        axios.post(`${API_BASE_URL}/graphrag-search`, requestBody, { timeout: 30000 }),
-        axios.post(`${API_BASE_URL}/traditional-rag-search`, requestBody, { timeout: 30000 })
-      ]);
+      const comparisonRes = await axios.post(`${API_BASE_URL}/compare-rag-modes`, requestBody, { timeout: 30000 });
       
-      console.log('🔗 GraphRAG result:', graphragRes.data);
-      console.log('📄 Traditional RAG result:', traditionalRes.data);
+      console.log('⚖️ Comparison result:', comparisonRes.data);
       
-      // Create enhanced comparison data with new search modes
+      // Use the comparison data directly from the backend
       const comparison = {
         graphrag: {
-          ...graphragRes.data,
+          ...comparisonRes.data.graphrag,
           searchMode: 'graphrag'
         },
         traditional_rag: {
-          ...traditionalRes.data,
+          ...comparisonRes.data.traditional_rag,
           searchMode: 'traditional_rag'
         },
         query: searchQuery.trim()
@@ -114,19 +72,21 @@ function App() {
       console.log('🔀 Enhanced comparison data:', comparison);
       
       // Validate comparison data structure
-      if (!comparison.graphrag) {
-        console.error('❌ Missing graphrag data in comparison results');
+      if (!comparison.graphrag || !comparison.graphrag.answer) {
+        console.error('❌ Missing or invalid GraphRAG data in comparison results');
+        console.log('GraphRAG data:', comparison.graphrag);
       }
-      if (!comparison.traditional_rag) {
-        console.error('❌ Missing traditional_rag data in comparison results');
+      if (!comparison.traditional_rag || !comparison.traditional_rag.answer) {
+        console.error('❌ Missing or invalid Traditional RAG data in comparison results');
+        console.log('Traditional RAG data:', comparison.traditional_rag);
       }
-      console.log('🔗 GraphRAG summary:', graphragRes.data.answer ? 'Generated' : 'Failed');
-      console.log('📄 Traditional RAG summary:', traditionalRes.data.answer ? 'Generated' : 'Failed');
+      console.log('🔗 GraphRAG summary:', comparison.graphrag?.answer ? 'Generated' : 'Failed');
+      console.log('📄 Traditional RAG summary:', comparison.traditional_rag?.answer ? 'Generated' : 'Failed');
       
       setComparisonResults(comparison);
       
       // Run LLM judge evaluation if both summaries exist
-      if (comparison.graphrag.answer && comparison.traditional_rag.answer) {
+      if (comparison.graphrag?.answer && comparison.traditional_rag?.answer) {
         console.log('🤖 Running LLM Judge evaluation...');
         
         try {
@@ -135,8 +95,8 @@ function App() {
             query: searchQuery.trim(),
             
             // Anonymized summaries - judge doesn't know which method generated which
-            summary_a: comparison.graphrag.answer || 'No summary generated',
-            summary_b: comparison.traditional_rag.answer || 'No summary generated',
+            summary_a: comparison.graphrag?.answer || 'No summary generated',
+            summary_b: comparison.traditional_rag?.answer || 'No summary generated',
             
             // Evaluation criteria only (no source metadata that reveals method)
             evaluation_criteria: [
@@ -347,74 +307,14 @@ function App() {
     }
   };
 
-  // Function to search using different modes
+  // Function to run comparison analysis
   const searchGraph = async () => {
     if (!searchQuery.trim()) {
       setError('Please enter a search query');
       return;
     }
     
-    // Handle comparison mode
-    if (searchMode === 'comparison') {
-      return runComparisonAnalysis();
-    }
-    
-    setSearchLoading(true);
-    setError(null);
-    setSearchResults(null);
-    setComparisonResults(null);
-    setAnalysisResults(null);
-    
-    try {
-      const isConnected = await checkConnection();
-      if (!isConnected) {
-        throw new Error('Cannot connect to backend server. Please ensure the backend is running on port 8000.');
-      }
-      
-      let endpoint = '/search'; // default to knowledge graph search
-      if (searchMode === 'graphrag') {
-        endpoint = '/graphrag-search';
-      } else if (searchMode === 'traditional-rag') {
-        endpoint = '/traditional-rag-search';
-      } else if (searchMode === 'knowledge-graph-only') {
-        endpoint = '/knowledge-graph-only-search';
-      }
-      
-      const requestBody = {
-        query: searchQuery.trim(),
-        max_results: 8
-      };
-      
-      const res = await axios.post(`${API_BASE_URL}${endpoint}`, requestBody, { timeout: 30000 });
-      
-      setSearchResults({
-        ...res.data,
-        searchMode: searchMode
-      });
-      
-      if ((res.data.results && res.data.results.length === 0) || 
-          (res.data.documents && res.data.documents.length === 0)) {
-        setError('No relevant information found for your query. Try rephrasing or using different keywords.');
-      }
-    } catch (err) {
-      let errorMessage = `Failed to search ${searchMode === 'graphrag' ? 'GraphRAG (documents + knowledge graph)' : searchMode === 'traditional-rag' ? 'Traditional RAG (documents only)' : 'knowledge graph only'}`;
-      
-      if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
-        errorMessage = 'Cannot connect to backend server. Please ensure the backend is running on port 8000.';
-      } else if (err.response?.status === 422) {
-        errorMessage = 'Invalid search query. Please check your input.';
-      } else if (err.response?.status === 500) {
-        errorMessage = `Search failed: ${err.response.data?.detail || 'Internal server error'}`;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setSearchLoading(false);
-    }
+    return runComparisonAnalysis();
   };
   
   // Retry connection
@@ -428,43 +328,10 @@ function App() {
     checkConnection();
   }, []);
   
-  // Render the graph when data changes
-  useEffect(() => {
-    if (networkRef.current && graphData.nodes.length > 0) {
-      const data = {
-        nodes: graphData.nodes,
-        edges: graphData.edges,
-      };
-      const options = {
-        nodes: { 
-          shape: 'dot', 
-          size: 20, 
-          font: { size: 16 },
-          borderWidth: 2,
-          shadow: true
-        },
-        edges: { 
-          arrows: 'to', 
-          font: { align: 'middle' },
-          shadow: true,
-          smooth: { type: 'dynamic' }
-        },
-        physics: { 
-          stabilization: true,
-          barnesHut: { gravitationalConstant: -2000 }
-        },
-        interaction: {
-          hover: true,
-          selectConnectedEdges: false
-        }
-      };
-      new Network(networkRef.current, data, options);
-    }
-  }, [graphData]);
 
   return (
     <div className="App">
-      <h1>Knowledge Graph RAG Search</h1>
+      <h1>GraphRAG vs Traditional RAG Comparison</h1>
       
       {/* Settings Section */}
       <div className="settings-section" style={{ marginBottom: 20 }}>
@@ -480,20 +347,6 @@ function App() {
             </div>
             
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-              <button 
-                onClick={fetchGraph} 
-                disabled={loading || connectionStatus === 'disconnected'} 
-                className={`${loading ? 'shimmer' : ''}`}
-                style={{ 
-                  opacity: loading || connectionStatus === 'disconnected' ? 0.6 : 1,
-                  cursor: loading || connectionStatus === 'disconnected' ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
-                  padding: '8px 16px'
-                }}
-              >
-                {loading ? '🔄 Loading...' : '📊 Load Knowledge Graph'}
-              </button>
-              
               {connectionStatus === 'disconnected' && (
                 <button 
                   onClick={retryConnection}
@@ -503,17 +356,6 @@ function App() {
                 </button>
               )}
             </div>
-            
-            {graphData.nodes.length > 0 && (
-              <div className="success-message" style={{ 
-                padding: '6px 12px',
-                borderRadius: '12px',
-                fontSize: '12px',
-                fontWeight: '600'
-              }}>
-                ✅ Graph: {graphData.nodes.length} nodes, {graphData.edges.length} edges
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -522,60 +364,25 @@ function App() {
       <div className="search-container" style={{ marginBottom: 30, padding: 24, marginTop: 10 }}>
         <h2>🔍 AI-Powered Search</h2>
         
-        {/* Search Mode Selector */}
+        {/* Search Mode - Fixed to Comparison */}
         <div style={{ marginBottom: 15 }}>
-          <label style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 8, display: 'block' }}>
-            Search Mode:
-          </label>
-          <div style={{ display: 'flex', gap: 15 }}>
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <input
-                type="radio"
-                value="graphrag"
-                checked={searchMode === 'graphrag'}
-                onChange={(e) => setSearchMode(e.target.value)}
-                style={{ marginRight: 5 }}
-              />
-              <span style={{ color: searchMode === 'graphrag' ? '#007bff' : '#666' }}>
-                🔗 GraphRAG (Documents + Knowledge Graph)
-              </span>
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <input
-                type="radio"
-                value="traditional-rag"
-                checked={searchMode === 'traditional-rag'}
-                onChange={(e) => setSearchMode(e.target.value)}
-                style={{ marginRight: 5 }}
-              />
-              <span style={{ color: searchMode === 'traditional-rag' ? '#007bff' : '#666' }}>
-                📄 Traditional RAG (Documents Only)
-              </span>
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <input
-                type="radio"
-                value="knowledge-graph-only"
-                checked={searchMode === 'knowledge-graph-only'}
-                onChange={(e) => setSearchMode(e.target.value)}
-                style={{ marginRight: 5 }}
-              />
-              <span style={{ color: searchMode === 'knowledge-graph-only' ? '#007bff' : '#666' }}>
-                🕸️ Knowledge Graph Only
-              </span>
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <input
-                type="radio"
-                value="comparison"
-                checked={searchMode === 'comparison'}
-                onChange={(e) => setSearchMode(e.target.value)}
-                style={{ marginRight: 5 }}
-              />
-              <span style={{ color: searchMode === 'comparison' ? '#007bff' : '#666' }}>
-                ⚖️ Comparison Analysis
-              </span>
-            </label>
+          <div className="glass-container" style={{ 
+            padding: 12, 
+            background: 'var(--glass-bg-secondary)',
+            border: '2px solid var(--retro-cyan)',
+            borderRadius: 8
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              gap: 10,
+              color: 'var(--retro-cyan)',
+              fontWeight: 'bold'
+            }}>
+              <span style={{ fontSize: 18 }}>⚖️</span>
+              <span>GraphRAG vs Traditional RAG Comparison Mode</span>
+            </div>
           </div>
         </div>
         
@@ -584,12 +391,7 @@ function App() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              searchMode === 'graphrag' ? "Ask about investments, company strategies, or business trends..." :
-              searchMode === 'traditional-rag' ? "Search investment reports and business documents..." :
-              searchMode === 'comparison' ? "Compare GraphRAG vs Traditional RAG search results..." :
-              "Ask about companies, people, and their relationships..."
-            }
+            placeholder="Compare GraphRAG vs Traditional RAG search results..."
             style={{ 
               flex: 1, 
               padding: 16, 
@@ -623,547 +425,41 @@ function App() {
           padding: 12,
           background: 'var(--glass-bg-secondary)'
         }}>
-          💡 <strong>Try these examples:</strong>
-          {searchMode === 'graphrag' && (
-            <span> "Apple's investments for 2025", "Tesla's energy storage plans", "Meta's metaverse strategy"</span>
-          )}
-          {searchMode === 'traditional-rag' && (
-            <span> "Cloud infrastructure investment", "AI research funding", "Renewable energy projects"</span>
-          )}
-          {searchMode === 'knowledge-graph-only' && (
-            <span> "Who works at Google?", "What companies are in tech?", "Show me AI researchers"</span>
-          )}
-          {searchMode === 'comparison' && (
-            <>
-              <span> Try these powerful examples to see the difference:</span>
-              <div className="demo-queries">
-                <button 
-                  className="demo-query-button"
-                  onClick={() => setSearchQuery("Apple's investments for 2025")}
-                >
-                  Apple's investments for 2025
-                </button>
-                <button 
-                  className="demo-query-button"
-                  onClick={() => setSearchQuery("Tesla's partnerships with energy companies")}
-                >
-                  Tesla's partnerships
-                </button>
-                <button 
-                  className="demo-query-button"
-                  onClick={() => setSearchQuery("Google's AI research collaborations")}
-                >
-                  Google's AI research
-                </button>
-                <button 
-                  className="demo-query-button"
-                  onClick={() => setSearchQuery("Microsoft's cloud infrastructure investments")}
-                >
-                  Microsoft's cloud strategy
-                </button>
-              </div>
-            </>
-          )}
+          💡 <strong>Try these powerful examples to see the difference:</strong>
+          <div className="demo-queries">
+            <button 
+              className="demo-query-button"
+              onClick={() => setSearchQuery("What are the latest advances in large language models?")}
+            >
+              Large Language Models
+            </button>
+            <button 
+              className="demo-query-button"
+              onClick={() => setSearchQuery("How does federated learning work with computer vision?")}
+            >
+              Federated Learning & CV
+            </button>
+            <button 
+              className="demo-query-button"
+              onClick={() => setSearchQuery("What researchers are working on BERT and transformer models?")}
+            >
+              BERT & Transformers
+            </button>
+            <button 
+              className="demo-query-button"
+              onClick={() => setSearchQuery("Tell me about quantum computing developments")}
+            >
+              Quantum Computing
+            </button>
+            <button 
+              className="demo-query-button"
+              onClick={() => setSearchQuery("What is the relationship between neural networks and reinforcement learning?")}
+            >
+              Neural Networks & RL
+            </button>
+          </div>
         </div>
         
-        {/* Search Results */}
-        {searchResults && (
-          <div className="results-container slide-in" style={{ marginTop: 20, padding: 20 }}>
-            {/* Results Header */}
-            <div className="interactive-element" style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginBottom: 15
-            }}>
-              <h3 style={{ color: 'var(--glass-text)', margin: 0, textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
-                {searchResults.searchMode === 'graphrag' && '🔗 GraphRAG Search Results'}
-                {searchResults.searchMode === 'traditional-rag' && '📄 Traditional RAG Search Results'}
-                {searchResults.searchMode === 'knowledge-graph' && '🕸️ Knowledge Graph Results'}
-              </h3>
-              <div className="glass-container" style={{ 
-                fontSize: 12,
-                color: 'var(--glass-text-secondary)',
-                padding: '6px 12px',
-                borderRadius: 16,
-                fontWeight: '500'
-              }}>
-                {searchResults.documents ? `${searchResults.documents.length} documents` : 
-                 searchResults.results ? `${searchResults.results.length} results` : '0 results'} found
-              </div>
-            </div>
-
-            {/* Generated Answer (for GraphRAG and knowledge graph search) */}
-            {searchResults.answer && (
-              <>
-                <h4 style={{ color: 'var(--glass-text)', borderBottom: '2px solid var(--glass-accent)', paddingBottom: 8, textShadow: '0 1px 5px rgba(0, 0, 0, 0.1)' }}>
-                  📝 AI-Generated Answer
-                </h4>
-                <div className="glass-container" style={{ 
-                  padding: 24, 
-                  marginBottom: 20,
-                  fontSize: 16,
-                  lineHeight: 1.7,
-                  color: 'var(--glass-text)'
-                }}>
-                  {searchResults.answer}
-                </div>
-              </>
-            )}
-            
-            {/* Side-by-side Sources & Documents Layout */}
-            {((searchResults.citations && searchResults.citations.length > 0) || 
-              (searchResults.documents && searchResults.documents.length > 0)) && (
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: '1fr 1fr', 
-                gap: 20, 
-                marginBottom: 20 
-              }}>
-                {/* Left Column - Sources & Citations */}
-                <div>
-                  <h4 style={{ color: 'var(--retro-cyan)', marginBottom: 10, fontSize: '16px' }}>
-                    📚 Sources & Citations
-                  </h4>
-                  <div className="glass-container" style={{ 
-                    maxHeight: 400, 
-                    overflowY: 'auto',
-                    padding: 16
-                  }}>
-                    {searchResults.citations && searchResults.citations.length > 0 ? (
-                      searchResults.citations.map((citation, index) => (
-                        <div key={index} style={{ 
-                          marginBottom: 12,
-                          paddingBottom: 12,
-                          borderBottom: index < searchResults.citations.length - 1 ? '1px solid var(--glass-border-secondary)' : 'none'
-                        }}>
-                          <div style={{ 
-                            fontWeight: 'bold', 
-                            color: 'var(--retro-green)',
-                            fontSize: 14,
-                            marginBottom: 4
-                          }}>
-                            [{index + 1}] {citation.title || citation.source}
-                          </div>
-                          
-                          {citation.authors && (
-                            <div style={{ 
-                              fontSize: 12, 
-                              color: 'var(--glass-text-secondary)', 
-                              marginBottom: 2 
-                            }}>
-                              Authors: {Array.isArray(citation.authors) ? citation.authors.join(', ') : citation.authors}
-                            </div>
-                          )}
-                          
-                          {(citation.year || citation.venue) && (
-                            <div style={{ 
-                              fontSize: 12, 
-                              color: 'var(--glass-text-secondary)', 
-                              marginBottom: 2 
-                            }}>
-                              {citation.venue && `${citation.venue}`}{citation.year && ` (${citation.year})`}
-                            </div>
-                          )}
-                          
-                          {citation.doi && citation.doi !== 'N/A' && (
-                            <div style={{ 
-                              fontSize: 11, 
-                              color: 'var(--retro-cyan)', 
-                              marginTop: 2,
-                              fontFamily: 'JetBrains Mono, monospace'
-                            }}>
-                              DOI: {citation.doi}
-                            </div>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <div style={{ 
-                        textAlign: 'center', 
-                        color: 'var(--glass-text-secondary)', 
-                        fontSize: '14px',
-                        fontStyle: 'italic',
-                        padding: '20px'
-                      }}>
-                        No citations available
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Right Column - Relevant Documents */}
-                <div>
-                  <h4 style={{ color: 'var(--retro-pink)', marginBottom: 10, fontSize: '16px' }}>
-                    📄 Relevant Documents
-                  </h4>
-                  <div className="glass-container" style={{ 
-                    maxHeight: 400, 
-                    overflowY: 'auto',
-                    padding: 12
-                  }}>
-                    {searchResults.documents && searchResults.documents.length > 0 ? (
-                      searchResults.documents.map((doc, index) => (
-                        <div key={index} style={{ 
-                          padding: 12, 
-                          marginBottom: 8,
-                          background: index % 2 === 0 ? 'var(--glass-bg-secondary)' : 'var(--glass-bg-tertiary)',
-                          borderRadius: 8,
-                          border: '1px solid var(--glass-border-secondary)'
-                        }}>
-                          <div style={{ 
-                            fontWeight: 'bold', 
-                            marginBottom: 6,
-                            color: 'var(--retro-pink)',
-                            fontSize: 14
-                          }}>
-                            {doc.title}
-                          </div>
-                          
-                          {/* Document metadata */}
-                          <div style={{ marginBottom: 6 }}>
-                            <span style={{
-                              display: 'inline-block',
-                              background: 'var(--retro-orange)',
-                              color: 'black',
-                              padding: '2px 8px',
-                              borderRadius: 8,
-                              fontSize: 10,
-                              marginRight: 6,
-                              fontWeight: '600'
-                            }}>
-                              DOC
-                            </span>
-                            {doc.metadata?.type && (
-                              <span style={{
-                                display: 'inline-block',
-                                backgroundColor: 'var(--retro-cyan)',
-                                color: 'black',
-                                padding: '2px 6px',
-                                borderRadius: 8,
-                                fontSize: 10,
-                                marginRight: 6,
-                                fontWeight: '600'
-                              }}>
-                                {doc.metadata.type.replace('_', ' ').toUpperCase()}
-                              </span>
-                            )}
-                            {doc.metadata?.date && (
-                              <span style={{ fontSize: 10, color: 'var(--glass-text-secondary)' }}>
-                                📅 {doc.metadata.date}
-                              </span>
-                            )}
-                          </div>
-                          
-                          {/* Document content preview */}
-                          {doc.content && (
-                            <div style={{ 
-                              fontSize: 12, 
-                              color: 'var(--glass-text)', 
-                              marginBottom: 6,
-                              maxHeight: '80px',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              lineHeight: 1.3
-                            }}>
-                              {doc.content.length > 200 ? 
-                                `${doc.content.substring(0, 200)}...` : 
-                                doc.content}
-                            </div>
-                          )}
-                          
-                          {/* Similarity score */}
-                          <div style={{ 
-                            textAlign: 'right',
-                            marginTop: 6
-                          }}>
-                            <span style={{ 
-                              fontSize: 10,
-                              fontWeight: 'bold',
-                              color: doc.similarity > 0.7 ? 'var(--retro-green)' : 
-                                     doc.similarity > 0.5 ? 'var(--retro-yellow)' : 'var(--retro-pink)',
-                              background: 'var(--glass-bg-tertiary)',
-                              padding: '2px 6px',
-                              borderRadius: 4
-                            }}>
-                              {(doc.similarity * 100).toFixed(1)}% Match
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div style={{ 
-                        textAlign: 'center', 
-                        color: 'var(--glass-text-secondary)', 
-                        fontSize: '14px',
-                        fontStyle: 'italic',
-                        padding: '20px'
-                      }}>
-                        No documents available
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Documents-Only Search Results */}
-            {searchResults.searchMode === 'documents' && searchResults.documents && searchResults.documents.length > 0 && (
-              <div style={{ marginBottom: 20 }}>
-                {/* AI-Generated Answer for Documents-Only */}
-                <h4 style={{ color: 'var(--retro-green)', borderBottom: '2px solid var(--retro-green)', paddingBottom: 8, marginBottom: 15, fontSize: '18px' }}>
-                  📝 AI-Generated Answer
-                </h4>
-                <div className="glass-container" style={{ 
-                  padding: 24, 
-                  marginBottom: 20,
-                  fontSize: 16,
-                  lineHeight: 1.7,
-                  color: 'var(--glass-text)',
-                  background: 'var(--glass-bg-primary)',
-                  border: '2px solid var(--retro-green)',
-                  boxShadow: '0 0 20px var(--retro-green)'
-                }}>
-                  {searchResults.answer || (
-                    <div style={{ 
-                      color: 'var(--glass-text-secondary)', 
-                      fontStyle: 'italic',
-                      textAlign: 'center',
-                      padding: '20px 0'
-                    }}>
-                      🤖 Generating AI summary from documents... 
-                      <br />
-                      <span style={{ fontSize: '14px', marginTop: '8px', display: 'block' }}>
-                        If this persists, the backend may need to be configured to generate answers for document searches.
-                      </span>
-                    </div>
-                  )}
-                </div>
-                
-                <h4 style={{ color: 'var(--retro-pink)', marginBottom: 15, fontSize: '18px' }}>
-                  📄 Source Documents
-                </h4>
-                <div className="glass-container" style={{ 
-                  padding: 20,
-                  maxHeight: 600, 
-                  overflowY: 'auto' 
-                }}>
-                  {searchResults.documents.map((doc, index) => (
-                    <div key={index} style={{ 
-                      padding: 18, 
-                      marginBottom: 15,
-                      background: index % 2 === 0 ? 'var(--glass-bg-secondary)' : 'var(--glass-bg-tertiary)',
-                      borderRadius: 12,
-                      border: '2px solid var(--glass-border-secondary)'
-                    }}>
-                      <div style={{ 
-                        fontWeight: 'bold', 
-                        marginBottom: 8,
-                        color: 'var(--retro-pink)',
-                        fontSize: 16
-                      }}>
-                        {doc.title}
-                      </div>
-                      
-                      {/* Document metadata */}
-                      <div style={{ marginBottom: 10 }}>
-                        <span style={{
-                          display: 'inline-block',
-                          background: 'var(--retro-orange)',
-                          color: 'black',
-                          padding: '4px 12px',
-                          borderRadius: 8,
-                          fontSize: 12,
-                          marginRight: 8,
-                          fontWeight: '600'
-                        }}>
-                          DOCUMENT
-                        </span>
-                        {doc.metadata?.type && (
-                          <span style={{
-                            display: 'inline-block',
-                            backgroundColor: 'var(--retro-cyan)',
-                            color: 'black',
-                            padding: '4px 10px',
-                            borderRadius: 8,
-                            fontSize: 12,
-                            marginRight: 8,
-                            fontWeight: '600'
-                          }}>
-                            {doc.metadata.type.replace('_', ' ').toUpperCase()}
-                          </span>
-                        )}
-                        {doc.metadata?.date && (
-                          <span style={{ fontSize: 12, color: 'var(--glass-text-secondary)' }}>
-                            📅 {doc.metadata.date}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* Document content preview */}
-                      {doc.content && (
-                        <div style={{ 
-                          fontSize: 14, 
-                          color: 'var(--glass-text)', 
-                          marginBottom: 10,
-                          lineHeight: 1.5,
-                          background: 'var(--glass-bg-primary)',
-                          padding: 12,
-                          borderRadius: 8,
-                          border: '1px solid var(--glass-border)'
-                        }}>
-                          {doc.content.length > 500 ? 
-                            `${doc.content.substring(0, 500)}...` : 
-                            doc.content}
-                        </div>
-                      )}
-                      
-                      {/* Additional metadata */}
-                      {doc.metadata?.companies && (
-                        <div style={{ fontSize: 12, color: 'var(--glass-text-secondary)', marginBottom: 4 }}>
-                          🏢 Companies: {doc.metadata.companies}
-                        </div>
-                      )}
-                      {doc.metadata?.amount && (
-                        <div style={{ fontSize: 12, color: 'var(--retro-green)', fontWeight: 'bold', marginBottom: 4 }}>
-                          💰 Investment: {doc.metadata.amount}
-                        </div>
-                      )}
-                      
-                      {/* Similarity score */}
-                      <div style={{ 
-                        textAlign: 'right',
-                        marginTop: 10
-                      }}>
-                        <span style={{ 
-                          fontSize: 12,
-                          fontWeight: 'bold',
-                          color: (doc.similarity > 0.7) ? 'var(--retro-green)' : 
-                                 (doc.similarity > 0.5) ? 'var(--retro-yellow)' : 'var(--retro-pink)',
-                          background: 'var(--glass-bg-tertiary)',
-                          padding: '4px 10px',
-                          borderRadius: 6,
-                          border: '1px solid var(--glass-border)'
-                        }}>
-                          {(doc.similarity * 100).toFixed(1)}% Match
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Knowledge Graph Results */}
-            {searchResults.results && searchResults.searchMode !== 'documents' && (
-              <>
-                <h4 style={{ color: '#2c3e50', marginBottom: 10 }}>🔍 Related Knowledge Graph Nodes</h4>
-                <div style={{ maxHeight: 300, overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: 6 }}>
-                  {searchResults.results.map((result, index) => (
-                <div key={index} style={{ 
-                  padding: 15, 
-                  margin: 0,
-                  borderBottom: index < searchResults.results.length - 1 ? '1px solid #e9ecef' : 'none',
-                  backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start'
-                }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ 
-                      fontWeight: 'bold', 
-                      marginBottom: 5,
-                      color: '#2c3e50'
-                    }}>
-                      {result.node.name || result.node.title || result.node.text}
-                    </div>
-                    
-                    {/* Node type badges */}
-                    <div style={{ marginBottom: 8 }}>
-                      {result.node.labels.map((label, labelIndex) => (
-                        <span key={labelIndex} style={{
-                          display: 'inline-block',
-                          backgroundColor: 
-                            label === 'Company' ? '#007bff' :
-                            label === 'Person' ? '#28a745' :
-                            label === 'Topic' ? '#ffc107' :
-                            label === 'Document' ? '#6f42c1' : '#6c757d',
-                          color: 'white',
-                          padding: '2px 8px',
-                          borderRadius: 12,
-                          fontSize: 12,
-                          marginRight: 5,
-                          fontWeight: 'bold'
-                        }}>
-                          {label}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {/* Additional node information */}
-                    {result.node.industry && (
-                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
-                        Industry: {result.node.industry}
-                      </div>
-                    )}
-                    {result.node.role && (
-                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
-                        Role: {result.node.role}
-                      </div>
-                    )}
-                    {result.node.authors && (
-                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
-                        Authors: {Array.isArray(result.node.authors) ? 
-                          result.node.authors.slice(0, 3).join(', ') + (result.node.authors.length > 3 ? '...' : '') : 
-                          result.node.authors}
-                      </div>
-                    )}
-                    {result.node.year && (
-                      <div style={{ fontSize: 14, color: '#6c757d', marginBottom: 3 }}>
-                        Year: {result.node.year}
-                      </div>
-                    )}
-                    {result.node.description && (
-                      <div style={{ 
-                        fontSize: 14, 
-                        color: '#495057', 
-                        marginTop: 8,
-                        fontStyle: 'italic',
-                        maxHeight: '60px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
-                        {result.node.description.length > 150 ? 
-                          `${result.node.description.substring(0, 150)}...` : 
-                          result.node.description}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div style={{ 
-                    marginLeft: 15,
-                    textAlign: 'center',
-                    minWidth: '80px'
-                  }}>
-                    <div style={{ 
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      color: result.similarity > 0.7 ? '#28a745' : 
-                             result.similarity > 0.5 ? '#ffc107' : '#dc3545'
-                    }}>
-                      {(result.similarity * 100).toFixed(1)}%
-                    </div>
-                    <div style={{ fontSize: 12, color: '#6c757d' }}>
-                      Relevance
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-              </>
-            )}
-          </div>
-        )}
 
         {/* Comparison Results */}
         {comparisonResults && comparisonResults.graphrag && comparisonResults.traditional_rag && (
@@ -1211,12 +507,12 @@ function App() {
                         lineHeight: 1.6,
                         border: analysisResults?.winner === 'graphrag' ? '2px solid var(--retro-green)' : '1px solid var(--glass-border)'
                       }}>
-                        {comparisonResults.graphrag.answer}
+                        {comparisonResults.graphrag?.answer || 'No summary generated'}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--glass-text-secondary)', marginBottom: 10 }}>
-                        📊 Sources: {comparisonResults.graphrag.documents?.length || 0} documents, 
-                        {comparisonResults.graphrag.results?.length || 0} knowledge graph entities,
-                        {comparisonResults.graphrag.citations?.length || 0} citations
+                        📊 Sources: {comparisonResults.graphrag?.documents?.length || 0} documents, 
+                        {comparisonResults.graphrag?.graph_entities?.length || 0} knowledge graph entities,
+                        {comparisonResults.graphrag?.citations?.length || 0} citations
                       </div>
                     </>
                   ) : (
@@ -1269,10 +565,10 @@ function App() {
                         whiteSpace: 'pre-wrap',
                         wordWrap: 'break-word'
                       }}>
-                        {comparisonResults.traditional_rag.answer}
+                        {comparisonResults.traditional_rag?.answer || 'No summary generated'}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 10 }}>
-                        📊 Sources: {comparisonResults.traditional_rag.documents?.length || 0} documents only
+                        📊 Sources: {comparisonResults.traditional_rag?.documents?.length || 0} documents only
                         <br />
                         ⚠️ Limited to document content, no relationship context
                       </div>
@@ -1475,8 +771,8 @@ function App() {
                     </div>
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--glass-text-secondary)' }}>
-                    <strong>Current Status:</strong> {comparisonResults.graphrag.results?.length || 0} knowledge graph entities, 
-                    {comparisonResults.graphrag.documents?.length || 0} documents integrated
+                    <strong>Current Status:</strong> {comparisonResults.graphrag?.graph_entities?.length || 0} knowledge graph entities, 
+                    {comparisonResults.graphrag?.documents?.length || 0} documents integrated
                   </div>
                 </div>
               </div>
@@ -1514,35 +810,6 @@ function App() {
         </div>
       )}
       
-      {/* Graph Visualization */}
-      <div>
-        <h2>📈 Graph Visualization</h2>
-        {graphData.nodes.length === 0 ? (
-          <div style={{
-            height: '500px',
-            border: '2px dashed #ccc',
-            borderRadius: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f8f9fa',
-            color: '#666',
-            fontSize: 18
-          }}>
-            📊 Load the knowledge graph to see the visualization
-          </div>
-        ) : (
-          <div 
-            ref={networkRef} 
-            style={{ 
-              height: '500px', 
-              border: '2px solid #007bff',
-              borderRadius: 10,
-              backgroundColor: '#f8f9fa'
-            }} 
-          />
-        )}
-      </div>
     </div>
   );
 }

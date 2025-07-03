@@ -10,11 +10,10 @@ load_dotenv()
 
 from config import get_settings
 from database import db
-from services import search_service
-from hybrid_search import hybrid_search_service
-from vector_store import chroma_service
+from graphrag_service import graphrag_service
+from traditional_rag_service import traditional_rag_service
 from models import SearchQuery, HealthStatus, EvaluationRequest, EvaluationResponse
-from utils import setup_logging, format_graph_data
+from utils import setup_logging, safe_json_serialize
 
 # Setup logging
 setup_logging()
@@ -74,149 +73,70 @@ def health_check():
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
 
-@app.get("/graph")
-def get_graph():
-    """Get the complete knowledge graph"""
-    try:
-        logger.info("Graph data requested")
-        nodes = db.get_all_nodes()
-        edges = db.get_all_edges()
-        
-        graph_data = format_graph_data(nodes, edges)
-        return JSONResponse(graph_data)
-        
-    except Exception as e:
-        logger.error(f"Failed to get graph data: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve graph data: {str(e)}")
 
-@app.post("/search")
-def search_knowledge_graph(search_query: SearchQuery):
-    """Search the knowledge graph using semantic search and generate an answer"""
+
+
+
+
+
+
+@app.post("/compare-rag-modes")
+def compare_rag_modes(search_query: SearchQuery):
+    """Compare GraphRAG vs Traditional RAG side-by-side"""
     try:
-        logger.info(f"Knowledge graph search requested: '{search_query.query}' (max_results: {search_query.max_results})")
+        logger.info(f"RAG comparison requested: '{search_query.query}' (max_results: {search_query.max_results})")
         
-        result = search_service.search_and_answer(
+        # Run both searches in parallel
+        graphrag_result = graphrag_service.graphrag_search(
             query=search_query.query,
             max_results=search_query.max_results
         )
         
-        logger.info(f"Knowledge graph search completed. Found {len(result['results'])} results")
-        return JSONResponse(result)
-        
-    except Exception as e:
-        logger.error(f"Knowledge graph search failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
-
-@app.post("/hybrid-search")
-def hybrid_search(search_query: SearchQuery):
-    """Hybrid search combining ChromaDB documents with Neo4j knowledge graph"""
-    try:
-        logger.info(f"Hybrid search requested: '{search_query.query}' (max_results: {search_query.max_results})")
-        
-        # Perform hybrid search
-        hybrid_results = hybrid_search_service.hybrid_search(
+        traditional_result = traditional_rag_service.traditional_rag_search(
             query=search_query.query,
             max_results=search_query.max_results
         )
         
-        # Generate comprehensive answer
-        result = hybrid_search_service.generate_hybrid_answer(
-            query=search_query.query,
-            hybrid_results=hybrid_results
-        )
-        
-        logger.info(f"Hybrid search completed. Found {len(hybrid_results)} documents")
-        return JSONResponse(result)
-        
-    except Exception as e:
-        logger.error(f"Hybrid search failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Hybrid search failed: {str(e)}")
-
-@app.get("/documents/stats")
-def get_document_stats():
-    """Get statistics about the document collection"""
-    try:
-        stats = chroma_service.get_collection_stats()
-        return JSONResponse(stats)
-    except Exception as e:
-        logger.error(f"Failed to get document stats: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get stats: {str(e)}")
-
-@app.post("/documents/search")
-def search_documents_only(search_query: SearchQuery):
-    """Search only the document collection (ChromaDB) with LLM-generated summary"""
-    try:
-        logger.info(f"Document search requested: '{search_query.query}'")
-        
-        # Get document search results
-        results = chroma_service.search_documents(
-            query=search_query.query,
-            n_results=search_query.max_results
-        )
-        
-        # Initialize default values
-        answer = "No relevant documents found for this query."
-        citations = []
-        
-        # Generate LLM-powered summary if documents found
-        if results:
-            try:
-                # Create context from documents only (no knowledge graph)
-                context_text = f"User Query: {search_query.query}\n\n"
-                context_text += "RELEVANT DOCUMENTS:\n"
-                
-                for i, doc in enumerate(results[:5], 1):
-                    # Extract metadata safely
-                    title = doc.get('metadata', {}).get('title', f'Document {i}')
-                    content = doc.get('content', '')[:1000]
-                    authors = doc.get('metadata', {}).get('authors', 'Unknown')
-                    year = doc.get('metadata', {}).get('year', 'Unknown')
-                    
-                    context_text += f"\n{i}. {title}\n"
-                    context_text += f"Authors: {authors}\n"
-                    context_text += f"Year: {year}\n"
-                    context_text += f"Content: {content}...\n"
-                
-                logger.info(f"Generated context for LLM: {len(context_text)} characters")
-                
-                # Generate answer using LLM service
-                from services import LLMService
-                llm_service = LLMService()
-                answer = llm_service.generate_answer(search_query.query, context_text)
-                
-                logger.info(f"LLM generated answer: {len(answer)} characters")
-                
-                # Create citations from document metadata
-                citations = []
-                for doc in results:
-                    metadata = doc.get('metadata', {})
-                    citation = {
-                        "source": metadata.get('source', 'Unknown Source'),
-                        "title": metadata.get('title', 'Untitled Document'),
-                        "authors": metadata.get('authors', '').split(', ') if metadata.get('authors') else [],
-                        "year": metadata.get('year'),
-                        "venue": metadata.get('venue'),
-                        "doi": metadata.get('doi')
-                    }
-                    citations.append(citation)
-                
-                logger.info(f"Created {len(citations)} citations")
-                
-            except Exception as llm_error:
-                logger.error(f"LLM generation failed, using fallback: {llm_error}")
-                answer = f"Based on {len(results)} documents found, but LLM summary generation failed. Raw document content available in results."
-        
-        return JSONResponse({
+        # Format comparison response
+        comparison_response = {
             "query": search_query.query,
-            "answer": answer,
-            "results": results,
-            "citations": citations,
-            "total_found": len(results)
-        })
+            "search_mode": "comparison",
+            "graphrag": {
+                "answer": graphrag_result.answer,
+                "documents": graphrag_result.related_documents,
+                "graph_entities": graphrag_result.graph_entities,
+                "knowledge_paths": graphrag_result.knowledge_paths,
+                "citations": graphrag_result.citations,
+                "reasoning_trace": graphrag_result.reasoning_trace,
+                "total_sources": len(graphrag_result.related_documents) + len(graphrag_result.graph_entities)
+            },
+            "traditional_rag": {
+                "answer": traditional_result.answer,
+                "documents": traditional_result.documents,
+                "citations": traditional_result.citations,
+                "reasoning_trace": traditional_result.reasoning_trace,
+                "similarity_scores": traditional_result.similarity_scores,
+                "total_sources": len(traditional_result.documents)
+            },
+            "comparison_metrics": {
+                "graphrag_entities": len(graphrag_result.graph_entities),
+                "graphrag_documents": len(graphrag_result.related_documents),
+                "graphrag_paths": len(graphrag_result.knowledge_paths),
+                "traditional_documents": len(traditional_result.documents),
+                "graphrag_answer_length": len(graphrag_result.answer),
+                "traditional_answer_length": len(traditional_result.answer)
+            }
+        }
+        
+        logger.info(f"RAG comparison completed. GraphRAG: {len(graphrag_result.graph_entities)} entities, {len(graphrag_result.related_documents)} docs. Traditional: {len(traditional_result.documents)} docs")
+        
+        # Safely serialize the response to handle Neo4j DateTime objects
+        safe_response = safe_json_serialize(comparison_response)
+        return JSONResponse(safe_response)
         
     except Exception as e:
-        logger.error(f"Document search failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Document search failed: {str(e)}")
+        logger.error(f"RAG comparison failed: {e}")
+        raise HTTPException(status_code=500, detail=f"RAG comparison failed: {str(e)}")
 
 @app.post("/evaluate-summaries", response_model=EvaluationResponse)
 def evaluate_summaries(evaluation_request: EvaluationRequest):

@@ -1,6 +1,9 @@
 import logging
 import sys
+import json
+from datetime import datetime, date
 from typing import Dict, Any
+from neo4j.time import DateTime, Date, Time
 
 def setup_logging(level: str = "INFO") -> None:
     """Setup logging configuration"""
@@ -26,16 +29,23 @@ def setup_logging(level: str = "INFO") -> None:
     logging.getLogger("httpcore").setLevel(logging.WARNING)
     logging.getLogger("neo4j").setLevel(logging.WARNING)
 
-def format_graph_data(nodes: list, edges: list) -> Dict[str, Any]:
-    """Format graph data for frontend consumption"""
-    formatted_nodes = []
-    for node in nodes:
-        label = node["labels"][0] if node["labels"] else "Node"
-        formatted_node = {
-            "id": node["id"],
-            "label": node["name"] or node["title"] or label,
-            "group": label,
-        }
-        formatted_nodes.append(formatted_node)
-    
-    return {"nodes": formatted_nodes, "edges": edges}
+def serialize_for_json(obj):
+    """Custom JSON serializer for Neo4j and other non-serializable objects"""
+    if isinstance(obj, (DateTime, Date, Time)):
+        return obj.isoformat()
+    elif isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    elif hasattr(obj, '__dict__'):
+        # Handle custom objects by converting to dict
+        return {k: serialize_for_json(v) for k, v in obj.__dict__.items()}
+    elif isinstance(obj, dict):
+        return {k: serialize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [serialize_for_json(item) for item in obj]
+    else:
+        return obj
+
+def safe_json_serialize(data):
+    """Safely serialize data to JSON, handling Neo4j types"""
+    return json.loads(json.dumps(data, default=serialize_for_json))
+

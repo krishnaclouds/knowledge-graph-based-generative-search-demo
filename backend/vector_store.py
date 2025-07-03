@@ -164,6 +164,27 @@ class ChromaDBService:
         except Exception as e:
             logger.error(f"Failed to get collection stats: {e}")
             return {"document_count": 0, "collection_name": "documents"}
+    
+    def get_all_documents(self) -> List[Dict[str, Any]]:
+        """Get all documents from ChromaDB (for validation)"""
+        try:
+            # Get all documents
+            results = self.collection.get()
+            
+            formatted_results = []
+            if results['documents']:
+                for i in range(len(results['documents'])):
+                    formatted_results.append({
+                        'id': results['ids'][i],
+                        'content': results['documents'][i],
+                        'metadata': results['metadatas'][i] if results['metadatas'] else {}
+                    })
+            
+            return formatted_results
+            
+        except Exception as e:
+            logger.error(f"Failed to get all documents: {e}")
+            return []
 
 # Global instance
 chroma_service = ChromaDBService()

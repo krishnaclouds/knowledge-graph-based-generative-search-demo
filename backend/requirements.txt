@@ -8,4 +8,7 @@ anthropic
 sentence-transformers
 numpy
 scikit-learn
-chromadb 
+chromadb
+feedparser
+requests
+lxml 
