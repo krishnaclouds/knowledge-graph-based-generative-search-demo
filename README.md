@@ -33,7 +33,13 @@ A focused comparison application that demonstrates the differences between Graph
 - **`models.py`**: Pydantic data models for API validation
 - **`config.py`**: Environment configuration management
 - **`database.py`**: Neo4j database operations
-- **`services.py`**: Business logic for search and embeddings
+- **`core_services.py`**: Business logic for search and embeddings
+- **`graphrag_service.py`**: GraphRAG implementation using knowledge graphs
+- **`traditional_rag_service.py`**: Traditional RAG implementation
+- **`llm_judge.py`**: LLM-based evaluation and comparison logic
+- **`data_orchestrator.py`**: Data collection pipeline orchestration
+- **`data_collectors/`**: Specialized data collectors (ArXiv, GitHub, news, etc.)
+- **`vector_store.py`**: ChromaDB vector store operations
 - **`utils.py`**: Utility functions for logging and data formatting
 
 ## 🚀 Quick Start
@@ -311,7 +317,7 @@ docker-compose up -d
 #### No search results
 - **Solution**: Load sample data or check if Neo4j has data
   ```bash
-  cd backend && python sample_data.py
+  cd backend && python run_collection.py
   ```
 
 ### Logs
