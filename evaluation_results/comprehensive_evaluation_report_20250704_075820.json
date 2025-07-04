@@ -1,0 +1,107 @@
+{
+  "evaluation_summary": {
+    "timestamp": "2025-07-04T07:58:20.636125",
+    "total_queries": 160,
+    "graphrag_wins": 120,
+    "traditional_rag_wins": 40,
+    "ties": 0,
+    "graphrag_win_rate": 75.0,
+    "traditional_rag_win_rate": 25.0,
+    "tie_rate": 0.0
+  },
+  "confidence_analysis": {
+    "average_confidence": 78.5,
+    "high_confidence_decisions": 67,
+    "low_confidence_decisions": 0,
+    "high_confidence_percentage": 41.88
+  },
+  "criteria_performance": {
+    "completeness": {
+      "graphrag_avg": 8.625,
+      "traditional_rag_avg": 7.575,
+      "graphrag_advantage": 1.0499999999999998
+    },
+    "accuracy": {
+      "graphrag_avg": 7.775,
+      "traditional_rag_avg": 7.55625,
+      "graphrag_advantage": 0.21875
+    },
+    "contextual_depth": {
+      "graphrag_avg": 8.25625,
+      "traditional_rag_avg": 7.54375,
+      "graphrag_advantage": 0.7124999999999995
+    },
+    "clarity": {
+      "graphrag_avg": 7.86875,
+      "traditional_rag_avg": 7.35,
+      "graphrag_advantage": 0.5187500000000007
+    },
+    "relevance_to_query": {
+      "graphrag_avg": 8.20625,
+      "traditional_rag_avg": 6.9125,
+      "graphrag_advantage": 1.293750000000001
+    },
+    "actionable_insights": {
+      "graphrag_avg": 7.2375,
+      "traditional_rag_avg": 6.0625,
+      "graphrag_advantage": 1.1749999999999998
+    }
+  },
+  "category_performance": {
+    "ai_ml_research": {
+      "graphrag": 16,
+      "traditional_rag": 4,
+      "ties": 0
+    },
+    "company_technology": {
+      "graphrag": 17,
+      "traditional_rag": 3,
+      "ties": 0
+    },
+    "cross_domain_connections": {
+      "graphrag": 17,
+      "traditional_rag": 3,
+      "ties": 0
+    },
+    "research_trends": {
+      "graphrag": 16,
+      "traditional_rag": 4,
+      "ties": 0
+    },
+    "technical_deep_dive": {
+      "graphrag": 12,
+      "traditional_rag": 8,
+      "ties": 0
+    },
+    "industry_applications": {
+      "graphrag": 18,
+      "traditional_rag": 2,
+      "ties": 0
+    },
+    "comparative_analysis": {
+      "graphrag": 10,
+      "traditional_rag": 10,
+      "ties": 0
+    },
+    "future_directions": {
+      "graphrag": 14,
+      "traditional_rag": 6,
+      "ties": 0
+    }
+  },
+  "complexity_performance": {
+    "low": {
+      "graphrag": 53,
+      "traditional_rag": 15,
+      "ties": 0
+    },
+    "high": {
+      "graphrag": 67,
+      "traditional_rag": 25,
+      "ties": 0
+    }
+  },
+  "prediction_accuracy": 70.0,
+  "statistical_significance": {
+    "p_value": 5.703659766709279e-11,
+    "significant_at_05": 

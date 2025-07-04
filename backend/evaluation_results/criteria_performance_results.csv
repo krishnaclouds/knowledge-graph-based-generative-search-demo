@@ -1,0 +1,7 @@
+Criteria,GraphRAG Average Score,Traditional RAG Average Score,GraphRAG Advantage,Advantage Level
+Completeness,8.46,7.5,0.96,Strong
+Accuracy,7.62,7.5,0.12,Minimal
+Contextual Depth,8.11,7.5,0.61,Moderate
+Clarity,7.99,7.5,0.49,Moderate
+Relevance to Query,8.69,7.5,1.19,Very Strong
+Actionable Insights,8.62,7.5,1.12,Very Strong

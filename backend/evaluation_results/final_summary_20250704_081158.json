@@ -1,0 +1,66 @@
+{
+  "evaluation_summary": {
+    "total_queries": 160,
+    "graphrag_wins": 109,
+    "traditional_rag_wins": 51,
+    "ties": 0,
+    "graphrag_win_rate": 68.1,
+    "traditional_rag_win_rate": 31.9,
+    "average_confidence": 78.2,
+    "high_confidence_decisions": 73,
+    "low_confidence_decisions": 0,
+    "statistical_significance": true,
+    "p_value": 0.0,
+    "effect_size": 0.181,
+    "prediction_accuracy": 65.8
+  },
+  "criteria_performance": {
+    "completeness": {
+      "graphrag_advantage": 0.96
+    },
+    "accuracy": {
+      "graphrag_advantage": 0.12
+    },
+    "contextual_depth": {
+      "graphrag_advantage": 0.61
+    },
+    "clarity": {
+      "graphrag_advantage": 0.49
+    },
+    "relevance_to_query": {
+      "graphrag_advantage": 1.19
+    },
+    "actionable_insights": {
+      "graphrag_advantage": 1.12
+    }
+  },
+  "category_performance": {
+    "ai_ml_research": {
+      "graphrag_win_rate": 55.0
+    },
+    "technical_deep_dive": {
+      "graphrag_win_rate": 55.0
+    },
+    "industry_applications": {
+      "graphrag_win_rate": 90.0
+    },
+    "comparative_analysis": {
+      "graphrag_win_rate": 55.0
+    },
+    "future_directions": {
+      "graphrag_win_rate": 60.0
+    },
+    "company_technology": {
+      "graphrag_win_rate": 85.0
+    },
+    "cross_domain_connections": {
+      "graphrag_win_rate": 65.0
+    },
+    "research_trends": {
+      "graphrag_win_rate": 80.0
+    }
+  },
+  "timestamp": "2025-07-04T08:11:58.204236",
+  "evaluation_type": "Comprehensive GraphRAG vs Traditional RAG Comparison",
+  "methodology": "160 queries across 8 categories, blind LLM judge evaluation"
+}

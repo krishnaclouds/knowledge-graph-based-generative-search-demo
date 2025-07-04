@@ -1,0 +1,386 @@
+{
+  "completed_queries": 30,
+  "timestamp": "2025-07-04T07:35:22.397973",
+  "results": [
+    {
+      "query": "How is Google advancing artificial intelligence research?",
+      "category": "company_technology",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "Google is advancing artificial intelligence (AI) research in several key ways:\n\n1. Developing Cutting-Edge AI Technologies:\n   - Google is a leader in developing large language models (LLMs) and other advanced AI systems like computer vision models. The knowledge graph shows connections between computer vision, LLMs, and AI research.\n   - Documents mention Google's work on frameworks like Dopamine for fast prototyping of reinforcement learning algorithms, showcasing their focus on developing novel AI capabilities.\n\n2. Fostering AI Research Talent:\n   - The knowledge graph indicates that Google employs prominent AI researchers like Ambuj Mehrish, Krish Jain, and Gopi Krishnan Rajbahadur, suggesting they are building a strong AI research team.\n   - Documents reference other AI researchers like Maria Barbosa, Soujanya Poria, Bryan Catanzaro, Rafael Valle, and Chuan Li who are affiliated with Google, demonstrating their ability to attract top talent.\n\n3. Advancing AI Applications in Various Domains:\n   - Google's AI research spans diverse areas, including computer vision, natural language processing, and reinforcement learning, as evidenced by the connections in the knowledge graph.\n   - The documents mention Google's work on applications like human-like bots for tactical shooters and the use of generative AI in scientific research, showcasing",
+      "traditional_rag_summary": "Based on the retrieved documents, here is how Google is advancing artificial intelligence research:\n\nThe documents do not contain any information specifically about how Google is advancing AI research. The documents focus more broadly on the rise of generative AI in scientific research, the potential impact of AI on healthcare and the workforce, and the challenges of testing and evaluating AI systems. \n\nWhile the documents discuss the rapid growth and increasing use of generative AI technologies like ChatGPT and GPT-4 across various domains, they do not mention any specific advancements or research being done by Google. The documents are more focused on the general trends and implications of advanced AI, rather than the work of any individual tech companies like Google.\n\nWithout any direct information about Google's AI research efforts in the retrieved documents, I am unable to provide a comprehensive answer to the original query. The documents do not contain the necessary details to describe how Google is specifically advancing artificial intelligence research. More targeted information would be needed to fully address this query.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A provides a more comprehensive and relevant overview of how Google is advancing artificial intelligence research, covering key aspects like developing cutting-edge AI technologies, fostering AI research talent, and advancing AI applications in various domains. In contrast, Summary B acknowledges the lack of information about Google's specific AI research efforts in the provided documents, and instead discusses broader trends in generative AI without addressing the original query.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 8,
+          "summary_b": 3
+        },
+        "accuracy": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 7,
+          "summary_b": 6
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 2
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 3
+        }
+      },
+      "timestamp": "2025-07-04T07:33:50.630516"
+    },
+    {
+      "query": "What AI technologies is Microsoft developing?",
+      "category": "company_technology",
+      "complexity": "low",
+      "expected_advantage": "high",
+      "graphrag_summary": "Based on the information gathered from the documents and knowledge graph, Microsoft appears to be actively developing several key AI technologies:\n\n1. Computer Vision: The documents indicate that Microsoft is working on various computer vision technologies, including tools for image and video labeling, object detection, and tracking. This is evidenced by projects like OpenLabeling, AS-One, and the use of computer vision libraries like OpenCV.\n\n2. Large Language Models: The knowledge graph reveals connections between computer vision, blockchain, and large language models (LLMs). This suggests that Microsoft is exploring the integration of computer vision with advanced language understanding capabilities, potentially for applications like multimodal AI.\n\n3. Generative AI: While not directly mentioned in the provided documents, the knowledge graph connections to researchers like Qingkun Tang and Vasiliy A. Es'kin, who work on LLMs, indicate that Microsoft is likely also investing in generative AI technologies. This is further supported by the references to OpenAI's GPT-4 and the potential impact of advanced language models on healthcare and medical research.\n\n4. Responsible AI Development: The documents highlight Microsoft's efforts to explore the governance and testing of AI systems, particularly in the context of emerging technologies like generative AI. This suggests a focus on developing AI responsibly and addressing challenges around the deployment and use of these powerful AI capabilities.\n\nIn summary, the evidence points to Microsoft actively developing a",
+      "traditional_rag_summary": "Based on the retrieved documents, it appears that Microsoft is primarily focused on developing AI technologies related to responsible AI development, testing, and evaluation. The key points from the documents are:\n\n1. Microsoft is tapping into expertise across domains like genome editing and cybersecurity to investigate the role of testing and evaluation as a governance tool for responsible AI development and deployment. This includes examining best practices, challenges, and regulatory implications.\n\n2. Microsoft is exploring how lessons from other transformative technologies can be applied to advance AI evaluation and testing, addressing gaps in how AI models and systems are currently assessed. This involves looking at questions around what should be evaluated, who should conduct evaluations, and how to ensure reliable results.\n\n3. Microsoft is examining the broader societal and organizational impacts of advanced AI models like ChatGPT and GPT-4, particularly in the healthcare domain. This includes exploring how generative AI is reshaping tasks, workflows, and the healthcare workforce.\n\n4. Microsoft is collaborating with experts and thought leaders to better understand and guide the responsible adoption of transformative AI technologies across industries and applications. This involves discussing the opportunities, risks, and governance frameworks needed.\n\nOverall, the documents indicate that Microsoft's AI development efforts are heavily focused on responsible AI practices, testing and evaluation frameworks, and understanding the broader implications of advanced AI systems. The company is leveraging cross-domain expertise to help shape the responsible development and deployment of AI technologies.",
+      "winner": "summary_b",
+      "confidence": 70,
+      "reasoning": "Summary B appears more comprehensive with 1729 characters vs the other summary with 1585 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:34:01.209279"
+    },
+    {
+      "query": "How does Apple integrate machine learning into its products?",
+      "category": "company_technology",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "To provide a comprehensive answer on how Apple integrates machine learning into its products, I will synthesize information from the given documents and knowledge graph relationships.\n\nFrom the knowledge graph, we can see that Apple is a major technology company that develops consumer electronics, software, and online services. The graph also shows that machine learning is a broad research area that encompasses techniques like reinforcement learning and deep learning. These machine learning approaches are often used to power large language models and other AI-driven capabilities.\n\nThe documents provide some additional context on how machine learning is applied in practice. For example, the ML-Agents toolkit enables training of intelligent agents using deep reinforcement learning and imitation learning, which could be relevant to Apple's product development. The \"Reinforcement Learning: An Introduction\" and other reinforcement learning resources suggest that this technique is a key part of modern machine learning.\n\nSynthesizing this information, we can say that Apple likely integrates machine learning in several ways across its product portfolio:\n\n1. Powering intelligent assistants and natural language processing: Apple's Siri virtual assistant likely leverages large language models and other machine learning techniques to understand and respond to user queries. This allows Siri to provide more natural and contextual interactions.\n\n2. Enhancing computer vision and image processing: Machine learning, especially deep learning, is widely used for tasks like object detection, image classification, and computational photography. This enables features in Apple's iPhone an",
+      "traditional_rag_summary": "Unfortunately, the documents retrieved based on vector similarity do not contain any information about how Apple specifically integrates machine learning into its products. The documents are mostly about general machine learning frameworks, algorithms, and libraries, but do not mention anything about Apple's use of machine learning. To answer this query, I would need to find documents that discuss Apple's machine learning integration and capabilities more directly. The current set of retrieved documents is not sufficient to provide a comprehensive answer to this query.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A provides a more comprehensive and accurate overview of how Apple integrates machine learning into its products, while Summary B acknowledges the lack of relevant information in the provided documents. Summary A synthesizes information from the knowledge graph and documents to describe specific ways Apple leverages machine learning, making it the superior response.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 8,
+          "summary_b": 3
+        },
+        "accuracy": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 7,
+          "summary_b": 5
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 2
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 2
+        }
+      },
+      "timestamp": "2025-07-04T07:34:10.165043"
+    },
+    {
+      "query": "What are Amazon's key contributions to cloud computing?",
+      "category": "company_technology",
+      "complexity": "low",
+      "expected_advantage": "high",
+      "graphrag_summary": "Based on the information provided in the documents and the knowledge graph relationships, here is a comprehensive answer on Amazon's key contributions to cloud computing:\n\n1. Pioneering Cloud Infrastructure: Amazon was one of the first major tech companies to recognize the potential of cloud computing and launched its Amazon Web Services (AWS) platform in 2006. AWS has since become the dominant player in the cloud infrastructure market, providing a wide range of scalable and flexible cloud services to businesses and developers.\n\n2. Driving Cloud Adoption: Through the success and continuous innovation of AWS, Amazon has played a pivotal role in driving the widespread adoption of cloud computing. AWS has set industry standards and pushed the boundaries of what's possible with cloud-based technologies, making it more accessible and attractive for organizations to migrate their workloads to the cloud.\n\n3. Enabling Scalable and Flexible Computing: A key contribution of AWS is its ability to provide on-demand, scalable computing resources to customers. This allows businesses to quickly scale up or down their computing power and storage as needed, without the need for significant upfront investments in hardware infrastructure. This flexibility and scalability have been crucial in supporting the growth of cloud-based applications and services.\n\n4. Advancing Cloud-Native Technologies: Amazon has been at the forefront of developing and promoting cloud-native technologies, such as containerization with Docker and orchestration with Kubernetes. These technologies have become essential for building and deploying",
+      "traditional_rag_summary": "Unfortunately, the retrieved documents do not contain any information about Amazon's key contributions to cloud computing. The documents are mostly about various AI and cloud-related technologies, but do not mention anything specific to Amazon's role or contributions in the cloud computing space. Without more relevant documents, I am unable to provide a comprehensive answer to the original query. The documents retrieved are not focused on the topic of Amazon's cloud computing contributions.",
+      "winner": "summary_a",
+      "confidence": 90,
+      "reasoning": "Summary A provides a comprehensive and accurate overview of Amazon's key contributions to cloud computing, covering critical aspects such as pioneering cloud infrastructure, driving cloud adoption, enabling scalable and flexible computing, and advancing cloud-native technologies. In contrast, Summary B indicates that the retrieved documents do not contain any relevant information to answer the original query, making it unable to provide a meaningful response.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 9,
+          "summary_b": 1
+        },
+        "accuracy": {
+          "summary_a": 9,
+          "summary_b": 5
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 2
+        },
+        "clarity": {
+          "summary_a": 9,
+          "summary_b": 6
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 1
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 1
+        }
+      },
+      "timestamp": "2025-07-04T07:34:20.211635"
+    },
+    {
+      "query": "How is Meta approaching virtual and augmented reality?",
+      "category": "company_technology",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "To provide a comprehensive answer on how Meta is approaching virtual and augmented reality, I will synthesize information from the given documents and knowledge graph relationships.\n\nFrom the knowledge graph, we can see that Meta (formerly Facebook) is a major technology company that operates in the virtual and augmented reality (VR/AR) space. The graph shows connections between Meta and researchers working on related technologies like computer vision and large language models.\n\nThe documents provide some additional context on Meta's VR/AR efforts:\n\n1. Document 434 and 436 discuss computer vision frameworks and libraries, which are foundational technologies for VR/AR applications that require real-time object detection, tracking, and scene understanding.\n\n2. Document 425 covers the popular OpenCV computer vision library, which is widely used in VR/AR development.\n\n3. The article \"From hallucinations to hardware: Lessons from a real-world computer vision project gone sideways\" discusses the challenges of building reliable computer vision models, which is crucial for immersive VR/AR experiences.\n\nCombining this information, we can see that Meta is heavily investing in the core computer vision and perception technologies that underpin virtual and augmented reality. The company has likely built significant internal expertise in these areas, as evidenced by the connections to researchers like Ambuj Mehrish, Anand Karna, and Manuel Toledo-Hernandez in the knowledge graph",
+      "traditional_rag_summary": "Unfortunately, the retrieved documents do not contain any information about how Meta (the company formerly known as Facebook) is approaching virtual and augmented reality. The documents are focused on topics like AI's impact on healthcare, OpenAI's work with the government and Mattel, and a technical paper on adaptive multi-path transmission control for VR/AR. There is no mention of Meta's specific strategies or initiatives related to virtual and augmented reality. To answer this query, I would need to find documents that directly discuss Meta's VR/AR efforts, plans, and technologies.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A provides a more comprehensive and contextual overview of how Meta is approaching virtual and augmented reality, drawing insights from the provided documents and knowledge graph. In contrast, Summary B acknowledges the lack of relevant information in the given materials to address the query.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 8,
+          "summary_b": 2
+        },
+        "accuracy": {
+          "summary_a": 8,
+          "summary_b": 8
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 2
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 1
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 1
+        }
+      },
+      "timestamp": "2025-07-04T07:34:29.734362"
+    },
+    {
+      "query": "What role does NVIDIA play in AI hardware acceleration?",
+      "category": "company_technology",
+      "complexity": "low",
+      "expected_advantage": "high",
+      "graphrag_summary": "Based on the information provided in the documents and knowledge graph, NVIDIA plays a significant role in enabling and accelerating AI hardware and software capabilities, particularly in the areas of machine learning, natural language processing, and reinforcement learning.\n\nKey points:\n\n1. NVIDIA HARDWARE ACCELERATION:\n   - NVIDIA's GPUs and specialized AI accelerators are widely used to provide hardware acceleration for machine learning and deep learning workloads.\n   - Documents mention the use of NVIDIA CUDA and OpenCV for GPU-accelerated computer vision and deep learning applications.\n   - NVIDIA's hardware is a key enabler for large language models and other advanced AI models that require significant computational power.\n\n2. ENABLING AI ECOSYSTEMS:\n   - NVIDIA's technologies and platforms are integrated with and enable the capabilities of other major tech companies like LinkedIn and Intel in the AI space.\n   - The knowledge graph shows that NVIDIA's AI hardware and software stack enables and powers the development of large language models, which are foundational for many AI applications.\n   - NVIDIA collaborates with and supports the broader AI ecosystem, including open-source projects like OpenAI Baselines for reinforcement learning.\n\n3. POWERING CUTTING-EDGE AI RESEARCH:\n   - NVIDIA's hardware and software are used in the development of advanced AI models, such as the GroverGPT large language model for quantum computing",
+      "traditional_rag_summary": "Based on the retrieved documents, it appears that NVIDIA plays a significant role in enabling hardware acceleration for AI and computer vision applications. The documents mention several ways NVIDIA's technology is used:\n\n1. NVIDIA GPUs are used to provide high-performance, GPU-accelerated computing for deep learning and neural network models, as mentioned in the documents on PyTorch and brain.js. NVIDIA's CUDA platform allows developers to leverage GPU acceleration for computationally intensive AI workloads.\n\n2. The document on \"Human-like Bots for Tactical Shooters\" discusses the challenges of applying AI methods in commercial video games due to computational constraints, and how the gaming industry prioritizes 3D rendering over AI. This suggests that NVIDIA's GPU hardware is important for enabling AI-powered game agents and bots within the constraints of commercial game development.\n\n3. While the documents do not directly discuss NVIDIA's role, the overall theme is that NVIDIA's GPU acceleration is a key enabler for deploying advanced AI and computer vision applications, particularly in domains like gaming, robotics, and other real-time, high-performance computing scenarios.\n\nHowever, the retrieved documents do not provide a comprehensive overview of NVIDIA's specific role and contributions in AI hardware acceleration. More targeted information on NVIDIA's product offerings, partnerships, and technical innovations in this space would be needed to fully answer the query.",
+      "winner": "summary_a",
+      "confidence": 85,
+      "reasoning": "Summary A provides a more comprehensive and accurate overview of NVIDIA's role in AI hardware acceleration, covering key aspects such as NVIDIA's hardware acceleration capabilities, its enabling of AI ecosystems, and its support for cutting-edge AI research. While Summary B touches on some relevant points, it lacks the depth and breadth of information present in Summary A.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 9,
+          "summary_b": 7
+        },
+        "accuracy": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 6
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:34:40.602511"
+    },
+    {
+      "query": "How is Tesla advancing autonomous driving technology?",
+      "category": "company_technology",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "To provide a comprehensive answer on how Tesla is advancing autonomous driving technology, I will synthesize information from the given documents and knowledge graph relationships.\n\nTesla's Approach to Autonomous Driving:\n- Tesla is leveraging advanced computer vision and deep learning techniques to enable autonomous driving capabilities in its vehicles. The knowledge graph shows that computer vision is a key enabling technology for large language models, which can enhance autonomous vehicle perception.\n- Documents mention that Tesla has developed its own Autopilot system with \"Full Self-Driving Capability\", indicating their focus on building end-to-end autonomous driving solutions.\n- The knowledge graph also connects Tesla to researchers working on large language models and computer vision, suggesting they are actively incorporating the latest AI advancements into their autonomous driving efforts.\n\nKey Autonomous Driving Technologies:\n- Computer vision is a core component of Tesla's autonomous driving stack, allowing the vehicles to perceive and interpret their surroundings. The documents discuss various computer vision techniques like feature detection, image matching, and sensor fusion that are critical for robust autonomous perception.\n- Large language models are emerging as a promising approach to enhance autonomous vehicle perception by providing advanced contextual understanding and decision support. The knowledge graph shows how researchers are leveraging LLMs to improve AV systems.\n- Sensor fusion, which combines data from multiple sensors like cameras, radar, and lidar, is another key technology that Tesla likely employs to build a comprehensive understanding",
+      "traditional_rag_summary": "Based on the retrieved documents, there is limited information directly addressing how Tesla is advancing autonomous driving technology. The documents focus more broadly on topics like computer vision, sensor integration, and liability challenges for autonomous vehicles, but do not provide specific details about Tesla's advancements.\n\nThe closest relevant information is in the second document, which discusses leveraging large language models to enhance autonomous vehicle perception. However, this is a general academic paper and does not mention Tesla or its specific work in this area.\n\nOverall, the retrieved documents do not contain enough information to provide a comprehensive answer to the query about how Tesla is advancing autonomous driving technology. The documents cover related topics in autonomous driving, but do not directly address Tesla's specific efforts and innovations in this space. More targeted information would be needed to fully answer this query.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A provides a more comprehensive and accurate overview of how Tesla is advancing autonomous driving technology, drawing insights from the provided documents and knowledge graph. It covers Tesla's key approaches, enabling technologies, and specific areas of focus, while Summary B lacks sufficient detail and context to fully address the query.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 8,
+          "summary_b": 4
+        },
+        "accuracy": {
+          "summary_a": 8,
+          "summary_b": 6
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 5
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 4
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 3
+        }
+      },
+      "timestamp": "2025-07-04T07:34:51.225318"
+    },
+    {
+      "query": "What are IBM's key innovations in quantum computing?",
+      "category": "company_technology",
+      "complexity": "low",
+      "expected_advantage": "high",
+      "graphrag_summary": "To provide a comprehensive answer on IBM's key innovations in quantum computing, I will synthesize information from the given documents and knowledge graph relationships.\n\nFrom the documents, we can see that IBM has been actively involved in advancing quantum computing technology. The key innovations highlighted include:\n\n1. Enhancing privacy in federated learning through quantum teleportation integration: This research explores using quantum teleportation to bolster the privacy of federated learning, where model updates are exchanged without sharing raw data. By leveraging quantum entanglement and the no-cloning theorem, this approach aims to ensure data remains secure during transmission.\n\n2. Development of GroverGPT: A large language model with 8 billion parameters for quantum searching. This model is designed to simulate the output of a quantum Turing machine using Grover's quantum circuits, which can provide quadratic speedups over classical counterparts. This work explores the potential of leveraging large language models to simulate quantum computing.\n\nThe knowledge graph relationships provide additional context on IBM's broader involvement in quantum computing and related technologies:\n\n- The graph shows connections between quantum computing, machine learning, and reinforcement learning, indicating IBM's interest in applying these technologies together.\n- IBM employees like Min Chen are involved in quantum computing research, suggesting the company's internal focus on advancing this field.\n- The graph also links quantum computing to other emerging technologies like blockchain and cloud computing, hinting at IBM's",
+      "traditional_rag_summary": "Based on the retrieved documents, there is limited information about IBM's specific innovations in quantum computing. The documents cover more general topics related to quantum computing, such as:\n\n1. GroverGPT: A paper exploring the use of large language models to simulate quantum Grover search algorithms, which could provide insights into the practical limits of classical simulatability for quantum circuits.\n\n2. A GitHub repository on hands-on learning for large language models, vector databases, and related topics, but without any direct mention of IBM or its quantum computing innovations.\n\n3. A paper discussing the potential of integrating quantum teleportation into federated learning frameworks to enhance privacy, but again without any specific references to IBM's work.\n\n4. A paper on active learning techniques for quantum process tomography using variational quantum circuits, which is a more general quantum computing research topic.\n\n5. A GitHub repository on machine learning algorithms, but not directly related to quantum computing or IBM's innovations.\n\nOverall, the retrieved documents do not provide comprehensive information about IBM's key innovations in quantum computing. The documents cover some general quantum computing research, but do not delve into the specific advancements made by IBM in this field. To answer this query more thoroughly, additional documents or sources focused on IBM's quantum computing work would be needed.",
+      "winner": "summary_a",
+      "confidence": 70,
+      "reasoning": "Summary A appears more comprehensive with 1648 characters vs the other summary with 1464 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:35:01.608426"
+    },
+    {
+      "query": "How is OpenAI contributing to large language model research?",
+      "category": "company_technology",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "Based on the information gathered from the documents and knowledge graph, here is a comprehensive overview of how OpenAI is contributing to large language model research:\n\n1. Advancing Natural Language Processing (NLP) Capabilities:\n   - The knowledge graph shows that large language models (LLMs) enable and are enabled by natural language processing (NLP) technologies. This suggests that OpenAI's work on LLMs is directly contributing to advancements in NLP.\n   - The documents mention OpenAI's focus on bringing advanced AI tools, including LLMs, to serve the public good and boost productivity, indicating their commitment to pushing the boundaries of NLP capabilities.\n\n2. Collaboration and Partnerships:\n   - The knowledge graph reveals connections between researchers like Qingkun Tang, Vasiliy A. Es'kin, and A. Novokhrestov, who are working on LLMs. This suggests that OpenAI may be collaborating with these researchers or similar experts in the field.\n   - The documents mention OpenAI's partnerships, such as with Mandala Partners, to develop AI economic blueprints. This collaborative approach likely extends to their LLM research as well.\n\n3. Practical Applications and Deployment:\n   - OpenAI's initiatives like \"OpenAI for Government\" and the \"AI Economic Blueprint for Australia\" demonstrate their efforts to apply L",
+      "traditional_rag_summary": "Based on the retrieved documents, it appears that OpenAI is contributing to large language model research in a few key ways:\n\n1. Developing advanced AI tools and making them available to the public sector through initiatives like \"OpenAI for Government\". This suggests OpenAI is working to apply its language model research to real-world government and public service applications.\n\n2. Providing an \"AI Economic Blueprint\" for Australia, which indicates OpenAI is researching the economic and productivity impacts of deploying its AI technologies, including large language models.\n\n3. Enabling use cases like code review and generation through models like GPT-4.1, demonstrating how OpenAI's language model research can be applied to software development workflows.\n\nHowever, the retrieved documents do not provide comprehensive details on OpenAI's specific contributions to large language model research itself. The documents focus more on the applications and deployment of OpenAI's technologies rather than the underlying research. To fully answer this query, more information would be needed on OpenAI's technical research efforts, publications, and advancements in large language model architectures, training techniques, and capabilities.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A provides a more comprehensive and detailed overview of how OpenAI is contributing to large language model research, covering key aspects such as advancing NLP capabilities, collaboration and partnerships, and practical applications and deployment. While Summary B touches on some relevant points, it lacks the depth and breadth of information present in Summary A.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 8,
+          "summary_b": 6
+        },
+        "accuracy": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 6
+        },
+        "clarity": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 7
+        }
+      },
+      "timestamp": "2025-07-04T07:35:11.988039"
+    },
+    {
+      "query": "What technologies is Salesforce developing for business automation?",
+      "category": "company_technology",
+      "complexity": "low",
+      "expected_advantage": "high",
+      "graphrag_summary": "Based on the information gathered from the documents and knowledge graph, Salesforce appears to be developing several key technologies for business automation:\n\n1. Large Language Models (LLMs): The knowledge graph indicates that Salesforce is enabling the development of large language models, which can then be used to power various AI-driven automation capabilities. These LLMs form the foundation for technologies like reinforcement learning, computer vision, and transformer models.\n\n2. Reinforcement Learning: Salesforce is enabling the use of reinforcement learning algorithms, which can be applied to automate decision-making and optimize business processes. The documents mention reinforcement learning frameworks like Dopamine and ML-Agents that could be leveraged for this purpose.\n\n3. Computer Vision: Salesforce is also enabling the development of computer vision technologies, which can be used to automate tasks like object detection, instance segmentation, and video analytics. The documents reference computer vision frameworks like Savant and AS-One that could be integrated into Salesforce's automation solutions.\n\n4. Transformer Models: Salesforce is enabling the use of transformer models, which are a type of neural network architecture that has shown great success in natural language processing and generation tasks. These transformer models can be used to build more advanced language-based automation capabilities.\n\n5. Bioinformatics: The knowledge graph indicates that Salesforce's LLM and AI technologies are also being applied to the",
+      "traditional_rag_summary": "Based on the retrieved documents, it does not appear that Salesforce is directly developing any specific technologies for business automation. The documents cover a range of topics related to AI, automation, and generative process automation, but do not mention any Salesforce-specific initiatives or products.\n\nThe documents discuss technologies like OpenAdapt, which is an open-source generative process automation framework, as well as AI agent models and systems from other companies like Mixus and AIHawk. However, there is no information provided about Salesforce's own work in this area.\n\nThe documents seem to be more broadly focused on advancements in AI-powered automation and process automation, rather than Salesforce's specific product roadmap or development efforts. Without any direct references to Salesforce's automation technologies, I cannot provide a comprehensive answer about what Salesforce is developing in this space based solely on the retrieved documents. More information specifically about Salesforce's automation initiatives would be needed to fully address the original query.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A appears more comprehensive with 1561 characters vs the other summary with 1107 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:35:22.385946"
+    }
+  ]
+}

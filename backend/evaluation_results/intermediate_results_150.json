@@ -1,0 +1,386 @@
+{
+  "completed_queries": 150,
+  "timestamp": "2025-07-04T07:48:51.968920",
+  "results": [
+    {
+      "query": "What are the future directions in artificial general intelligence?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "medium",
+      "graphrag_summary": "Based on the information gathered from the documents and knowledge graph, here is a comprehensive overview of the future directions in artificial general intelligence (AGI):\n\n1. Advancements in Large Language Models (LLMs):\n   - The documents highlight the development of large language models like GroverGPT, which have 8 billion parameters and can be used to simulate quantum computing algorithms.\n   - These powerful LLMs are expected to play a crucial role in advancing AGI by enabling more sophisticated natural language processing and reasoning capabilities.\n   - The relationships in the knowledge graph show that LLMs are enabled by a combination of technologies, including machine learning, reinforcement learning, and quantum computing.\n\n2. Quantum Computing Integration:\n   - The documents and knowledge graph indicate that the integration of quantum computing with AI/ML is a key future direction for AGI.\n   - Quantum teleportation and quantum-inspired algorithms like Grover's algorithm are being explored to enhance the privacy and performance of federated learning and other AI systems.\n   - The relationships show that quantum computing enables advancements in machine learning, reinforcement learning, and large language models, which are all critical components of AGI.\n\n3. Reinforcement Learning Advancements:\n   - The knowledge graph reveals strong connections between reinforcement learning, machine learning, and large language models, suggesting that reinforcement learning will be a crucial component of future",
+      "traditional_rag_summary": "Based on the retrieved documents, there are a few potential future directions for artificial general intelligence (AGI) that can be identified:\n\n1. Continued advancements in large language models and generative AI: The documents mention the rapid progress of models like GPT-4, which demonstrate increasing capabilities in areas like natural language processing and generation. This suggests a focus on developing more advanced and capable AI systems that can engage in open-ended reasoning and creative tasks.\n\n2. Integrating AI with other domains: The documents hint at applying AI, particularly generative models, to fields like healthcare and software engineering. This points to a future direction of integrating AGI systems into various real-world applications and industries to augment and transform human capabilities.\n\n3. Automated algorithm design and evolution: One document discusses an AI agent called AlphaEvolve that can design advanced algorithms by combining large language models with automated evaluators. This suggests a future direction of AI systems that can autonomously create and improve algorithms, potentially leading to breakthroughs in fields like mathematics and computing.\n\n4. Increasing intelligence and reasoning capabilities: The documents reference the \"most intelligent AI model\" Gemini 2.5, indicating a focus on developing AI systems with more advanced cognitive abilities and reasoning skills, which could be a key component of achieving AGI.\n\nHowever, the retrieved documents provide limited information and do not offer a comprehensive overview of the future directions in AGI",
+      "winner": "summary_b",
+      "confidence": 65,
+      "reasoning": "Summary B appears more comprehensive with 1617 characters vs the other summary with 1535 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:47:17.890283"
+    },
+    {
+      "query": "How might quantum computing change machine learning?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "Here is a comprehensive answer on how quantum computing might change machine learning, using both the document content and knowledge graph relationships:\n\nQuantum computing has the potential to significantly impact and transform machine learning in several ways:\n\n1. Quantum Algorithms for Machine Learning:\n   - The documents mention quantum search algorithms like Grover's algorithm, which can provide quadratic speedups over classical algorithms for certain problems. These quantum algorithms could be leveraged to enhance machine learning tasks like optimization, sampling, and pattern recognition.\n   - The knowledge graph shows that quantum computing \"ENABLES\" large language models, which are a key driver of recent advancements in machine learning. Quantum algorithms may be able to accelerate the training and inference of these large models.\n\n2. Quantum-Enhanced Machine Learning Models:\n   - The documents describe efforts to integrate quantum computing techniques, like variational quantum circuits, into machine learning models. This could lead to new classes of \"quantum-enhanced\" machine learning models that leverage quantum phenomena for improved performance.\n   - The knowledge graph indicates connections between quantum computing, cloud computing, and machine learning. This suggests that the combination of quantum and classical computing resources could enable new hybrid machine learning architectures.\n\n3. Quantum Machine Learning for Quantum Systems:\n   - Some documents focus on using machine learning for quantum process tomography and characterization of quantum systems. This demonstrates how machine learning can be applied to better understand and control quantum phenomena",
+      "traditional_rag_summary": "Based on the retrieved documents, here is how quantum computing might change machine learning:\n\n1. Quantum Process Tomography (QPT): Quantum computing could enable more efficient and adaptive methods for characterizing and reconstructing quantum systems, which is a fundamental task in quantum machine learning. The documents discuss using active learning techniques with variational quantum circuits to select the most informative quantum states for QPT, improving the efficiency of the process.\n\n2. Quantum Simulation and Pattern Recognition: Large language models like GroverGPT, trained on quantum circuit data, could potentially be used to simulate the output of quantum Turing machines and approximate the results of quantum algorithms like Grover's search. This could provide a more efficient classical approach to simulating certain quantum computations compared to brute-force state-vector simulations.\n\n3. Secure Federated Learning: Integrating quantum teleportation into federated learning frameworks could enhance the privacy and security of the model update exchange process. By leveraging quantum entanglement and the no-cloning theorem, quantum teleportation could ensure the secure transmission of model parameters and gradients between clients and servers.\n\n4. Transfer Learning for Quantum Algorithms: The documents discuss techniques for transferring the optimal variational parameters of the Quantum Approximate Optimization Algorithm (QAOA) from one instance of a combinatorial optimization problem to another. This could potentially accelerate the training and converg",
+      "winner": "summary_a",
+      "confidence": 85,
+      "reasoning": "Summary A provides a more comprehensive, accurate, and contextually rich overview of how quantum computing could impact and transform machine learning. It covers a broader range of relevant topics, including quantum algorithms, quantum-enhanced machine learning models, and the use of machine learning for understanding quantum systems. The information is presented in a clear, well-structured manner and directly addresses the original query.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 9,
+          "summary_b": 7
+        },
+        "accuracy": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "clarity": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 7
+        }
+      },
+      "timestamp": "2025-07-04T07:47:28.373382"
+    },
+    {
+      "query": "What are the potential impacts of neuromorphic computing on AI?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "medium",
+      "graphrag_summary": "The potential impacts of neuromorphic computing on AI can be significant, as it offers a fundamentally different approach to computing that can enhance various AI capabilities. Here's a comprehensive analysis drawing from the document content and knowledge graph relationships:\n\n1. Improved Energy Efficiency: Neuromorphic computing is inspired by the brain's efficient use of energy, which could lead to more energy-efficient AI systems. The document \"Analog Alchemy\" discusses how neuromorphic computing with memristive devices can combine memory and computation to improve the energy efficiency of neural computation, in contrast to the traditional von Neumann architecture.\n\n2. Enhanced Parallel Processing: The brain's inherent parallel processing capabilities can be better emulated by neuromorphic hardware, potentially leading to faster and more scalable AI systems. This could benefit areas like computer vision, as seen in the \"UnrealZoo\" document, which explores using photorealistic virtual worlds for embodied AI agents.\n\n3. Improved Spiking Neural Networks: Neuromorphic computing is well-suited for spiking neural networks, which more closely resemble the brain's signaling mechanisms. This could enable the development of more biologically plausible AI models, potentially leading to advancements in areas like human-computer interaction and software engineering, as suggested by the knowledge graph relationships.\n\n4. Quantum Computing Integration: The knowledge graph shows a connection between quantum computing and large language",
+      "traditional_rag_summary": "Based on the retrieved documents, here is a summary of the potential impacts of neuromorphic computing on AI:\n\nThe key potential impact of neuromorphic computing on AI is improved energy efficiency and performance for neural network-based AI systems. The first document discusses how neuromorphic computing, which combines memory and computation using memristive devices, can enable more efficient neural computation compared to traditional von Neumann architectures. The separation of memory and computation in von Neumann systems creates an energy bottleneck for neural workloads, whereas neuromorphic approaches can better exploit the physics of the underlying hardware substrate.\n\nThe other documents provide some additional context on neuromorphic computing and AI, though they do not directly address the specific impacts. Document 2 mentions brain.js, a GPU-accelerated neural network library for JavaScript, indicating interest in neuromorphic-inspired hardware acceleration for AI. Document 3 discusses Gemini, an AI model from DeepMind, but does not relate it to neuromorphic computing. Document 4 is a general roadmap for becoming an AI expert, without specific mention of neuromorphic computing. And Document 5 explores a speculative neural network motif inspired by homeostasis, but does not directly connect it to neuromorphic hardware.\n\nIn summary, the key potential impact highlighted by the retrieved documents is the ability of neuromorphic computing to improve the energy efficiency and performance of neural network-",
+      "winner": "summary_b",
+      "confidence": 60,
+      "reasoning": "Summary B appears more comprehensive with 1536 characters vs the other summary with 1549 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:47:40.508510"
+    },
+    {
+      "query": "How might brain-computer interfaces integrate with AI?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "GraphRAG search encountered an error: 'name'",
+      "traditional_rag_summary": "Based on the retrieved documents, here is a synthesis of how brain-computer interfaces (BCIs) might integrate with AI:\n\nThe key document is \"Human-AI Teaming Using Large Language Models: Boosting Brain-Computer Interfacing (BCI) and Brain Research\" (Document 1). This paper discusses how AI systems, particularly large language models, could be used to augment and enhance BCI development and brain research. \n\nThe authors argue that a focus on human-AI teaming, rather than fully autonomous AI systems, is the most promising approach for advancing BCI technology. By combining human expertise and decision-making with the capabilities of AI, the research process for BCIs and brain science could be significantly accelerated and improved.\n\nSome key ways the paper suggests AI could integrate with BCIs:\n- Using AI to automate aspects of the BCI research process, such as data analysis, hypothesis generation, and manuscript writing\n- Leveraging large language models to assist human researchers in interpreting BCI data and generating insights\n- Employing AI systems to simulate and model brain-computer interactions, informing BCI design and development\n- Integrating AI into BCI systems to enhance their intelligence, adaptability, and decision-making capabilities\n\nThe other documents provide some tangential context, such as the use of AI in robotics and general AI development frameworks. However, they do not directly address the specific question of how BC",
+      "winner": "summary_b",
+      "confidence": 85,
+      "reasoning": "Summary B provides a more comprehensive, accurate, and relevant response to the query on how brain-computer interfaces (BCIs) might integrate with AI. It draws insights from a key research paper and covers the main ways AI could enhance BCI development and brain research, making it the superior summary.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 1,
+          "summary_b": 8
+        },
+        "accuracy": {
+          "summary_a": 1,
+          "summary_b": 9
+        },
+        "contextual_depth": {
+          "summary_a": 1,
+          "summary_b": 8
+        },
+        "clarity": {
+          "summary_a": 1,
+          "summary_b": 8
+        },
+        "relevance_to_query": {
+          "summary_a": 1,
+          "summary_b": 9
+        },
+        "actionable_insights": {
+          "summary_a": 1,
+          "summary_b": 8
+        }
+      },
+      "timestamp": "2025-07-04T07:47:47.908756"
+    },
+    {
+      "query": "What are the future applications of AI in space exploration?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "medium",
+      "graphrag_summary": "Here is a comprehensive answer on the future applications of AI in space exploration, synthesizing information from the provided documents and knowledge graph:\n\nAI will play a crucial role in advancing space exploration in the coming years. Several key AI technologies are poised to have a significant impact:\n\n1. Machine Learning and Deep Learning:\n   - Machine learning and deep learning models will enable autonomous decision-making and navigation for spacecraft and rovers. This can improve mission efficiency, reduce the need for human intervention, and allow for exploration of more remote and dangerous areas.\n   - Document 457 highlights how reinforcement learning, a type of machine learning, is being used in the Unity ML-Agents toolkit to train intelligent agents for simulated space environments.\n\n2. Natural Language Processing (NLP):\n   - NLP will enhance human-spacecraft communication, allowing for more natural and intuitive interactions. This can improve the ability to relay instructions and receive status updates.\n   - Document 424 discusses how AWS Machine Learning University is providing accelerated NLP training, which could benefit future space missions.\n\n3. Quantum Computing:\n   - Quantum computing has the potential to revolutionize space exploration by enabling faster data processing, more accurate simulations, and secure communication.\n   - Document 1 explores how quantum teleportation can be integrated with federated learning to enhance privacy in collaborative AI models, which could be crucial for space missions.\n   - Document ",
+      "traditional_rag_summary": "Based on the retrieved documents, there are a few potential future applications of AI in space exploration that can be identified:\n\n1. AI-powered robotic systems: The documents mention the development of AI models and frameworks like Gemini Robotics and ML-Agents that enable intelligent agents and robots to understand, act, and react in physical environments. This suggests AI could be used to power advanced robotic systems for space exploration tasks.\n\n2. AI-driven simulation and training: The ML-Agents toolkit enables the use of games and simulations as environments for training intelligent agents using deep reinforcement learning and imitation learning. This indicates AI could be leveraged to create realistic space exploration simulations for training astronauts and robotic systems.\n\n3. AI infrastructure for space operations: The document on Stargate UAE mentions the deployment of OpenAI's AI infrastructure platform, which could potentially be used to support AI-powered systems and applications for space missions and operations.\n\nHowever, the retrieved documents do not provide comprehensive or detailed information on the specific future applications of AI in space exploration. The documents are more focused on general AI frameworks, models, and infrastructure, rather than space-specific use cases. To fully answer this query, more targeted information on AI applications in the context of space exploration would be needed.",
+      "winner": "summary_a",
+      "confidence": 65,
+      "reasoning": "Summary A appears more comprehensive with 1566 characters vs the other summary with 1446 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:47:58.319962"
+    },
+    {
+      "query": "How might AI evolve to better understand human emotions?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "To better understand how AI could evolve to improve its understanding of human emotions, we can synthesize insights from the provided documents and knowledge graph relationships:\n\n1. Enabling Human-Computer Interaction: The knowledge graph shows that blockchain technology and large language models enable advancements in human-computer interaction (HCI) research. This suggests that as AI systems become more sophisticated, they can leverage improved HCI to better perceive and respond to human emotional cues.\n\n2. Anthropomorphic Features and Persuasion Strategies: The document on chatbot donation experiments indicates that anthropomorphic features and persuasion strategies can impact user perceptions and behaviors. This implies that as AI systems become more human-like in their interactions, they may be better able to recognize and adapt to human emotional states.\n\n3. Evolving Algorithms and Models: The documents on AlphaEvolve and Gemini 2.5 demonstrate how AI can be designed to autonomously evolve its algorithms and models. By incorporating this self-improvement capability, future AI systems could dynamically adapt their emotional understanding based on interactions with humans.\n\n4. Multimodal Perception: The knowledge graph shows connections between AI, large language models, and researchers working on areas like computer vision and speech recognition. Integrating these multimodal perception capabilities could allow AI to better detect and interpret human emotional expressions beyond just text-based cues.\n\n5.",
+      "traditional_rag_summary": "Based on the retrieved documents, here is a synthesis of how AI might evolve to better understand human emotions:\n\nThe key insights from the documents are:\n\n1. Current theory of mind benchmarks for large language models (LLMs) are flawed, as they cannot directly test how LLMs adapt to new partners and exhibit consistent reasoning across different situations (Document 4). This suggests that new approaches are needed to assess an AI's ability to understand human emotions and mental states.\n\n2. One promising direction is to develop AI systems that can leverage empathy and emotion-based markers to provide mental health support (Document 5). This involves creating conversational AI models that can accurately detect and respond to human emotional states, which could be an important step towards better understanding human emotions.\n\n3. The documents also mention the potential for AI to transform healthcare and organizational systems (Document 3), which could include applications related to emotional intelligence and supporting human wellbeing.\n\n4. While the documents do not provide a clear roadmap, they suggest that advancements in areas like theory of mind benchmarking, empathetic conversational models, and applications in healthcare and mental health could all contribute to the evolution of AI towards better understanding human emotions.\n\nIn summary, the key ways AI might evolve to better understand human emotions based on the retrieved documents include: developing more robust theory of mind assessment methods, creating empathetic conversational AI systems, and applying emotional intelligence",
+      "winner": "summary_b",
+      "confidence": 65,
+      "reasoning": "Summary B appears more comprehensive with 1615 characters vs the other summary with 1534 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:48:09.084858"
+    },
+    {
+      "query": "What are the potential developments in AI-powered creativity?",
+      "category": "future_directions",
+      "complexity": "low",
+      "expected_advantage": "medium",
+      "graphrag_summary": "Based on the information from the documents and knowledge graph, here is a comprehensive overview of potential developments in AI-powered creativity:\n\n1. Advancements in Large Language Models (LLMs):\n   - The documents mention the development of large language models like GroverGPT, which have 8 billion parameters and can be used for quantum computing simulations.\n   - These powerful LLMs have the potential to enable more advanced natural language processing and generation capabilities, which could be leveraged for creative applications like language-based content generation, ideation, and assistive writing.\n\n2. Integration of Quantum Computing:\n   - The knowledge graph and documents highlight the connections between AI technologies like machine learning, reinforcement learning, and quantum computing.\n   - Integrating quantum computing with AI systems could lead to breakthroughs in areas like quantum-enhanced machine learning, quantum-inspired creativity, and quantum-powered generative models.\n   - This could enable new forms of AI-driven creativity that leverage the unique properties of quantum mechanics, such as superposition and entanglement.\n\n3. Advancements in Reinforcement Learning:\n   - The documents and knowledge graph indicate that reinforcement learning is a key enabling technology for AI-powered creativity, particularly in areas like game development and simulation-based training.\n   - Continued progress in reinforcement learning algorithms and their integration with other AI techniques could lead to more",
+      "traditional_rag_summary": "Based on the retrieved documents, here is a synthesis of the potential developments in AI-powered creativity:\n\nThe documents suggest that AI is making significant advances in areas related to creativity and scientific discovery. A key development is the rise of \"generative AI\" - AI systems that can generate novel content, ideas, and algorithms.\n\nThe Towards Strong AI document discusses how strong AI with general cognitive abilities and scientific creativity comparable to humans is an active area of research and debate. It introduces a theoretical framework called \"Transformational Beliefs\" for modeling and understanding scientific creativity. This suggests that AI may be able to assist or even drive scientific breakthroughs and discoveries in the future.\n\nThe AlphaEvolve document describes an AI agent that can evolve advanced algorithms for math and practical computing applications by combining the creativity of large language models with automated evaluators. This points to AI's potential to augment and enhance human creativity in algorithm design and problem-solving.\n\nThe Rise of Generative AI in Science paper analyzes the rapid growth and diffusion of generative AI techniques across scientific domains beyond just computer science. This indicates that generative AI is becoming an increasingly important tool for scientific research and discovery.\n\nOverall, the documents suggest that key developments in AI-powered creativity may include:\n- Advances in generative AI systems that can produce novel ideas, content, and algorithms\n- AI systems that can assist or drive scientific breakthroughs and discoveries ",
+      "winner": "summary_a",
+      "confidence": 85,
+      "reasoning": "Summary A provides a more comprehensive and detailed overview of the potential developments in AI-powered creativity, covering key areas like advancements in large language models, integration of quantum computing, and progress in reinforcement learning. The information is presented in a clear, well-structured manner and directly addresses the original query. While Summary B also highlights relevant developments, it lacks the depth and specificity of Summary A.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 9,
+          "summary_b": 7
+        },
+        "accuracy": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "clarity": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 7
+        }
+      },
+      "timestamp": "2025-07-04T07:48:19.974773"
+    },
+    {
+      "query": "How might AI contribute to solving global challenges?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "AI has significant potential to contribute to solving global challenges in a variety of ways, as evidenced by the information gathered from the documents and knowledge graph:\n\n1. Enhancing Cybersecurity: The knowledge graph shows connections between AI, blockchain, and cybersecurity, indicating that AI can be leveraged to improve cybersecurity and protect critical infrastructure. For example, the document on \"Blockchain-Empowered Cyber-Secure Federated Learning\" demonstrates how AI and blockchain can be combined to create secure and trustworthy edge computing systems.\n\n2. Improving Financial Systems: The knowledge graph reveals connections between AI, finance, and fintech, suggesting that AI can be used to optimize financial systems and services. The document on \"FinRL: Financial Reinforcement Learning\" showcases how AI-powered trading agents can be developed to enhance algorithmic trading and financial decision-making.\n\n3. Advancing Scientific Research: The knowledge graph highlights connections between AI and various researchers, indicating that AI can accelerate scientific discoveries and innovation. For instance, the document on \"AI Testing and Evaluation\" discusses how lessons from other scientific domains can inform the responsible development and deployment of AI systems.\n\n4. Addressing Global Challenges: While the specific documents do not directly address global challenges, the knowledge graph suggests that AI can be applied to a wide range of domains, including those relevant to solving global issues. For example, AI could be used to",
+      "traditional_rag_summary": "Based on the retrieved documents, AI could potentially contribute to solving global challenges in the following ways:\n\n1. Responsible AI Development and Governance: The first document discusses the importance of responsible AI development, testing, and evaluation as a governance tool to ensure the safe and ethical deployment of AI systems, especially as they become more advanced and capable. This suggests that AI could help address global challenges if developed and deployed responsibly, with appropriate safeguards and oversight.\n\n2. Expanding AI Applications Across Domains: The documents indicate that generative AI and other AI technologies are rapidly expanding beyond computer science into diverse scientific research domains. This suggests that as AI capabilities grow, they could be leveraged to tackle challenges across a wide range of fields, from healthcare to climate change to sustainable development.\n\n3. Collaboration and International Cooperation: The documents mention the importance of collaboration within the AI community and with policymakers to proactively assess and mitigate risks associated with advanced AI systems. This collaborative approach could facilitate the development of AI solutions to global problems that require international cooperation.\n\nHowever, the retrieved documents do not provide a comprehensive overview of how AI might contribute to solving global challenges. They focus more on the responsible development and governance of AI, rather than specific applications or use cases. To fully address the query, a more diverse set of documents covering a broader range of AI's potential contributions would be needed.",
+      "winner": "summary_a",
+      "confidence": 80,
+      "reasoning": "Summary A provides a more comprehensive and detailed overview of how AI could contribute to solving global challenges, covering a wider range of potential applications and use cases. While Summary B touches on some relevant aspects, such as responsible AI development and the expanding applications of AI, it lacks the depth and specificity of Summary A.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 8,
+          "summary_b": 6
+        },
+        "accuracy": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "contextual_depth": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "clarity": {
+          "summary_a": 9,
+          "summary_b": 8
+        },
+        "relevance_to_query": {
+          "summary_a": 9,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 8,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:48:30.471550"
+    },
+    {
+      "query": "What are the future directions in human-AI collaboration?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "medium",
+      "graphrag_summary": "Based on the information gathered from the documents and knowledge graph, here is a comprehensive overview of the future directions in human-AI collaboration:\n\n1. Enhancing Privacy and Security in Human-AI Collaboration:\n   - The integration of quantum teleportation into federated learning frameworks can enhance privacy by securing the exchange of model updates during collaborative training (Document 1).\n   - Leveraging the principles of quantum entanglement and the no-cloning theorem, quantum teleportation can ensure that sensitive data remains secure during transmission in human-AI collaborative systems.\n\n2. Advancing Large Language Models for Quantum Computing:\n   - Researchers are exploring the potential of using large language models (LLMs) to simulate the output of quantum Turing machines and Grover's quantum circuits (Document 3).\n   - GroverGPT, an 8-billion-parameter LLM, has been developed to explore the capabilities of LLMs in simulating quantum algorithms and potentially accelerating quantum computing research.\n\n3. Integrating Reinforcement Learning into Human-AI Teaming:\n   - The Unity Machine Learning Agents Toolkit (ML-Agents) enables the training of intelligent agents using deep reinforcement learning and imitation learning (Document 2).\n   - This integration of reinforcement learning into game and simulation environments can facilitate the development of collaborative human-AI systems, where agents can learn",
+      "traditional_rag_summary": "Based on the retrieved documents, here is a summary of the future directions in human-AI collaboration:\n\n1. Leveraging human-AI teaming for brain research and brain-computer interfacing (BCI) development: The first document discusses how human-AI teaming, rather than fully autonomous AI systems, is the most promising approach for advancing BCI and broader neuroscience research. By combining human expertise with AI capabilities, this approach can boost progress in these domains.\n\n2. Blending automation with human judgment for safe AI deployment: The third document mentions the \"colleague-in-the-loop\" model, which integrates human oversight and decision-making with AI automation, particularly for high-risk workflows. This approach aims to overcome the liability challenges faced by AI agents acting independently.\n\n3. Prioritizing technical safety and proactive risk assessment in advanced AI development: The fourth document highlights DeepMind's focus on exploring the frontiers of artificial general intelligence (AGI) while prioritizing technical safety, proactive risk assessment, and collaboration with the broader AI community. This suggests a cautious, responsible approach to developing powerful AI systems.\n\n4. Increasing use of generative AI in scientific research: The fifth document analyzes the rapid growth and diffusion of generative AI across various scientific domains, beyond just computer science. This indicates that the integration of generative AI capabilities is becoming more prevalent in scientific research and discovery.\n\nOverall, the",
+      "winner": "summary_b",
+      "confidence": 65,
+      "reasoning": "Summary B appears more comprehensive with 1570 characters vs the other summary with 1448 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:48:41.456793"
+    },
+    {
+      "query": "How might AI systems become more energy efficient?",
+      "category": "future_directions",
+      "complexity": "high",
+      "expected_advantage": "high",
+      "graphrag_summary": "To make AI systems more energy efficient, there are several approaches that can be explored:\n\n1. Hardware Optimization:\n   - Develop specialized AI hardware like custom chips (e.g. GPUs, TPUs) that are designed for efficient neural network computations.\n   - Explore low-power architectures and energy-efficient transistor technologies to reduce the power consumption of AI hardware.\n   - Implement techniques like dynamic voltage and frequency scaling to adapt the hardware's power usage based on workload.\n\n2. Algorithmic Innovations:\n   - Research more efficient neural network architectures and training algorithms that require fewer computations and memory accesses.\n   - Investigate techniques like model compression, quantization, and pruning to reduce the size and complexity of AI models without significant accuracy loss.\n   - Develop sparse and efficient representations of data and models to minimize the energy required for storage and processing.\n\n3. Software and System Optimizations:\n   - Optimize AI software stacks and runtime systems to minimize unnecessary computations and memory access.\n   - Leverage techniques like batching, parallelization, and efficient data management to improve the overall energy efficiency of AI workloads.\n   - Explore ways to offload computations to the cloud or edge devices based on energy and performance requirements.\n\n4. Renewable Energy and Sustainability:\n   - Power AI systems using renewable energy sources like solar, win",
+      "traditional_rag_summary": "Unfortunately, the retrieved documents do not contain much information directly relevant to how AI systems might become more energy efficient. The documents focus more on the general impact and applications of AI, rather than technical details about improving the energy efficiency of AI systems themselves.\n\nSome potentially relevant information that can be gleaned from the documents:\n\n- The document on AlphaEvolve mentions that it is a \"Gemini-powered coding agent\", suggesting that Gemini is an AI system used for algorithm design and optimization. This could potentially include optimizing for energy efficiency, but the document does not go into those details.\n\n- The document on Gemini 2.5 refers to it as DeepMind's \"most intelligent AI model\", but again does not provide specifics on its energy efficiency.\n\n- The other documents discuss the broader societal and economic impacts of AI, but do not address technical approaches for improving AI energy efficiency.\n\nOverall, the retrieved documents do not provide a comprehensive answer to the original query. More targeted information on AI system design, hardware, and energy optimization techniques would be needed to fully address how AI systems could become more energy efficient. The current document set is too broad and lacks the necessary technical details.",
+      "winner": "summary_a",
+      "confidence": 65,
+      "reasoning": "Summary A appears more comprehensive with 1480 characters vs the other summary with 1324 characters.",
+      "criteria_scores": {
+        "completeness": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "accuracy": {
+          "summary_a": 7,
+          "summary_b": 7
+        },
+        "contextual_depth": {
+          "summary_a": 10,
+          "summary_b": 10
+        },
+        "clarity": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "relevance_to_query": {
+          "summary_a": 8,
+          "summary_b": 7
+        },
+        "actionable_insights": {
+          "summary_a": 7,
+          "summary_b": 6
+        }
+      },
+      "timestamp": "2025-07-04T07:48:51.965527"
+    }
+  ]
+}

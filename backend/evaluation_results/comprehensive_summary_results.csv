@@ -1,0 +1,15 @@
+Metric,Value
+Total Queries,160
+GraphRAG Wins,109
+Traditional RAG Wins,51
+Ties,0
+GraphRAG Win Rate (%),68.1
+Traditional RAG Win Rate (%),31.9
+Average Judge Confidence (%),78.2
+High Confidence Decisions (>80%),73
+Medium Confidence Decisions (60-80%),87
+Low Confidence Decisions (<60%),0
+Statistical Significance (p < 0.05),Yes
+P-Value,< 0.0001
+Effect Size,0.181
+Prediction Accuracy (%),65.8
