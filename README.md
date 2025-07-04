@@ -129,6 +129,8 @@ This evaluation provides strong evidence for the practical benefits of knowledge
 
 ### 🎯 Analysis Report 1: Performance by Query Category
 
+![Analysis Report 1](analysis_report.png)
+
 Our evaluation across 8 distinct query categories reveals GraphRAG's varying strengths across different types of information requests:
 
 | Query Category | GraphRAG Win Rate | Performance Level | Sample Size | Key Insights |
@@ -159,6 +161,8 @@ Our evaluation across 8 distinct query categories reveals GraphRAG's varying str
 
 ### 🏆 Analysis Report 2: Performance by Evaluation Criteria
 
+![Analysis Report 2](analysis_report_2.png)
+
 Detailed breakdown of GraphRAG vs Traditional RAG performance across 6 key evaluation criteria:
 
 | Criteria | GraphRAG Avg | Traditional RAG Avg | Advantage | Advantage Level | What This Means |
@@ -187,6 +191,8 @@ Detailed breakdown of GraphRAG vs Traditional RAG performance across 6 key evalu
 - **Clarity**: Both provide well-structured, understandable responses
 
 ### 📈 Analysis Report 3: Judge Confidence Distribution & Decision Quality
+
+![Analysis Report 3](analysis_report_3.png)
 
 Analysis of the LLM judge's confidence levels reveals high-quality, reliable evaluations:
 
