@@ -478,6 +478,69 @@
   line-height: 1.6;
 }
 
+/* Glassmorphism theme variables */
+:root {
+  --glass-bg-primary: rgba(255, 255, 255, 0.1);
+  --glass-bg-secondary: rgba(255, 255, 255, 0.05);
+  --glass-bg-tertiary: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-text-primary: #f8fafc;
+  --glass-text-secondary: #cbd5e1;
+  --glass-success: rgba(52, 211, 153, 0.2);
+  --retro-cyan: #22d3ee;
+  --retro-green: #34d399;
+  --retro-pink: #f472b6;
+  --retro-yellow: #fbbf24;
+}
+
+/* Glassmorphism containers */
+.glass-container {
+  background: var(--glass-bg-primary);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Interactive elements */
+.interactive-element {
+  transition: all 0.3s ease;
+  transform: translateZ(0);
+}
+
+.interactive-element:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Shimmer effect */
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Slide-in animation */
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   #root {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import SummaryVisualization from './SummaryVisualization';
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -332,6 +333,9 @@ function App() {
   return (
     <div className="App">
       <h1>GraphRAG vs Traditional RAG Comparison</h1>
+      
+      {/* Summary Visualization */}
+      <SummaryVisualization />
       
       {/* Settings Section */}
       <div className="settings-section" style={{ marginBottom: 20 }}>
