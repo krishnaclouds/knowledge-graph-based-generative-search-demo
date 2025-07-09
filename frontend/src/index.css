@@ -1,31 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chicago:wght@400;700&family=Monaco:wght@400;700&family=Helvetica:wght@300;400;500;600;700&display=swap');
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.6;
+  font-family: 'Chicago', 'Monaco', 'Helvetica', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.4;
   font-weight: 400;
   color-scheme: light dark;
   
-  /* Modern Clean Color Palette */
-  --primary-bg: #ffffff;
-  --secondary-bg: #f8fafc;
-  --tertiary-bg: #f1f5f9;
-  --border-color: #e2e8f0;
-  --border-focus: #3b82f6;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --accent-blue: #3b82f6;
-  --accent-blue-light: #dbeafe;
-  --accent-green: #10b981;
-  --accent-green-light: #d1fae5;
-  --accent-red: #ef4444;
-  --accent-red-light: #fee2e2;
-  --accent-yellow: #f59e0b;
-  --accent-yellow-light: #fef3c7;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Retro Apple Color Palette */
+  --apple-beige: #f7f3e9;
+  --apple-cream: #faf8f0;
+  --apple-gray: #c0c0c0;
+  --apple-dark-gray: #808080;
+  --apple-black: #000000;
+  --apple-white: #ffffff;
+  
+  /* Rainbow Apple Colors */
+  --apple-red: #ff6b6b;
+  --apple-orange: #ff9f43;
+  --apple-yellow: #feca57;
+  --apple-green: #48ca51;
+  --apple-cyan: #0abde3;
+  --apple-blue: #3742fa;
+  --apple-purple: #a55eea;
+  
+  /* Classic Mac Colors */
+  --mac-gray: #e5e5e5;
+  --mac-dark-gray: #8b8b8b;
+  --mac-blue: #007aff;
+  --mac-green: #34c759;
+  --mac-red: #ff3b30;
+  --mac-orange: #ff9500;
+  --mac-yellow: #ffcc00;
+  
+  /* UI Variables */
+  --primary-bg: var(--apple-beige);
+  --secondary-bg: var(--apple-cream);
+  --tertiary-bg: var(--apple-gray);
+  --border-color: var(--apple-dark-gray);
+  --border-focus: var(--mac-blue);
+  --text-primary: var(--apple-black);
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --accent-blue: var(--apple-blue);
+  --accent-blue-light: rgba(52, 120, 246, 0.1);
+  --accent-green: var(--apple-green);
+  --accent-green-light: rgba(72, 202, 81, 0.1);
+  --accent-red: var(--apple-red);
+  --accent-red-light: rgba(255, 107, 107, 0.1);
+  --accent-yellow: var(--apple-yellow);
+  --accent-yellow-light: rgba(254, 202, 87, 0.1);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   
   background: var(--primary-bg);
   color: var(--text-primary);
@@ -70,7 +96,25 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(135deg, var(--apple-beige) 0%, var(--apple-cream) 50%, var(--mac-gray) 100%);
+  position: relative;
+}
+
+/* Add retro Apple pattern overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 40%, rgba(255, 159, 67, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 60% 80%, rgba(254, 202, 87, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(72, 202, 81, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 h1 {
@@ -123,17 +167,37 @@ a:hover {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
   padding: 0.75rem 1.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  font-family: inherit;
+  font-family: 'Chicago', 'Monaco', monospace;
   background: var(--primary-bg);
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: var(--shadow-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add retro button styling */
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+button:hover::before {
+  left: 100%;
 }
 
 button:hover {
@@ -185,11 +249,24 @@ button.danger:hover {
 /* Card component */
 .card {
   background: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add retro card pattern */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
 }
 
 .card:hover {
@@ -201,15 +278,16 @@ button.danger:hover {
 input[type="text"], 
 input[type="search"],
 textarea {
-  background: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  background: var(--apple-white);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
   color: var(--text-primary);
-  font-family: inherit;
+  font-family: 'Monaco', monospace;
   font-size: 0.875rem;
   padding: 0.75rem 1rem;
   transition: all 0.2s ease;
   width: 100%;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 input[type="text"]:focus,

@@ -24,6 +24,14 @@
   color: var(--text-primary);
   margin-bottom: 0.5rem;
   text-align: center;
+  font-family: 'Chicago', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .App h2 {
@@ -56,13 +64,37 @@
 /* Search Container */
 .search-container {
   background: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 3px solid var(--border-color);
+  border-radius: 20px;
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   transition: all 0.2s ease;
   width: 100%;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add retro Apple rainbow stripe */
+.search-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
+  z-index: 1;
+}
+
+.search-container::after {
+  content: '🍎';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  opacity: 0.7;
+  z-index: 2;
 }
 
 .search-container:hover {
@@ -73,14 +105,28 @@
 /* Results Container */
 .results-container {
   background: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 3px solid var(--border-color);
+  border-radius: 20px;
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   transition: all 0.2s ease;
   width: 100%;
   flex: 1;
   overflow-y: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add retro Apple rainbow stripe */
+.results-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
+  z-index: 1;
 }
 
 .results-container:hover {
@@ -191,8 +237,8 @@
 .documents-container,
 .comparison-card {
   background: var(--primary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 3px solid var(--border-color);
+  border-radius: 16px;
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
@@ -200,6 +246,22 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add retro Apple rainbow stripe */
+.sources-container::before,
+.documents-container::before,
+.comparison-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
+  z-index: 1;
 }
 
 .sources-container:hover,
@@ -232,16 +294,29 @@
 }
 
 .metric-card {
-  background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  background: var(--apple-white);
+  border: 2px solid var(--apple-dark-gray);
+  border-radius: 12px;
   padding: 1rem;
   transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
 }
 
 .metric-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  border-color: var(--apple-blue);
 }
 
 /* Demo queries */
@@ -253,20 +328,37 @@
 }
 
 .demo-query-button {
-  background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
+  background: var(--apple-white);
+  border: 2px solid var(--apple-dark-gray);
   color: var(--text-primary);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
+  font-family: 'Chicago', monospace;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-query-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--apple-red), var(--apple-orange), var(--apple-yellow), var(--apple-green), var(--apple-cyan), var(--apple-blue), var(--apple-purple));
 }
 
 .demo-query-button:hover {
-  background: var(--accent-blue);
+  background: var(--apple-blue);
   color: white;
-  border-color: var(--accent-blue);
+  border-color: var(--apple-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Form elements */
@@ -478,28 +570,43 @@
   line-height: 1.6;
 }
 
-/* Glassmorphism theme variables */
+/* Retro Apple theme variables */
 :root {
-  --glass-bg-primary: rgba(255, 255, 255, 0.1);
-  --glass-bg-secondary: rgba(255, 255, 255, 0.05);
-  --glass-bg-tertiary: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-text-primary: #f8fafc;
-  --glass-text-secondary: #cbd5e1;
-  --glass-success: rgba(52, 211, 153, 0.2);
-  --retro-cyan: #22d3ee;
-  --retro-green: #34d399;
-  --retro-pink: #f472b6;
-  --retro-yellow: #fbbf24;
+  --glass-bg-primary: var(--apple-cream);
+  --glass-bg-secondary: var(--apple-beige);
+  --glass-bg-tertiary: var(--apple-gray);
+  --glass-border: var(--apple-dark-gray);
+  --glass-text-primary: var(--apple-black);
+  --glass-text-secondary: #333333;
+  --glass-success: var(--apple-green);
+  --retro-cyan: var(--apple-cyan);
+  --retro-green: var(--apple-green);
+  --retro-pink: var(--apple-red);
+  --retro-yellow: var(--apple-yellow);
 }
 
-/* Glassmorphism containers */
+/* Retro Apple containers */
 .glass-container {
-  background: var(--glass-bg-primary);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
+  background: var(--apple-cream);
+  border: 2px solid var(--apple-dark-gray);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add retro border effect */
+.glass-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--apple-white);
+  border-radius: 14px;
+  margin: 1px;
+  pointer-events: none;
 }
 
 /* Interactive elements */
